@@ -36,3 +36,6 @@ FruitsPang/cocos2d/*
 FruitsPang/proj.win32/.vs/*
 FruitsPang/proj.win32/Debug.win32/*
 FruitsPang/proj.win32/Release.win32/*
+
+# vs
+.vs/
