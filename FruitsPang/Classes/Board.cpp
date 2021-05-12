@@ -123,7 +123,7 @@ bool Board::checkForMatch(Block* block)
 
 	row = bp.row;
 
-	while (++row < MAX_ROW && block[row][bp.col] && blocks[row][bp.col]->getType() == block->getType()) // Check Right
+	while (++row < MAX_ROW && blocks[row][bp.col] && blocks[row][bp.col]->getType() == block->getType()) // Check Right
 		match++;
 
 	if (match >= MAX_MATCH)
