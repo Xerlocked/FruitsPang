@@ -3,6 +3,9 @@
 
 #include "cocos2d.h"
 
+#define EVENT_READY "event.custom.is_ready"
+#define EVENT_HAS_MATCH "event.custom.has_match"
+
 const int MAX_MATCH = 3;
 
 /// <summary>
