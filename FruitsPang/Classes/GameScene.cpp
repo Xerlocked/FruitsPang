@@ -31,11 +31,24 @@ void GameScene::onEnter()
 {
 	Layer::onEnter();
 
+	/// <summary>
+	/// GameScene
+	/// </summary>
 	Size screenSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto background = Layer::create();
-	background->setColor(Color3B::BLACK);
-	addChild(background);
+
+	auto background = Sprite::create("Images/GameSceneBackground.png");
+	background->setPosition(origin.x + screenSize.width / 2, origin.y + screenSize.height / 2);
+	
+	float rX = screenSize.width / background->getContentSize().width;
+	float rY = screenSize.height / background->getContentSize().height;
+
+	background->setScaleX(rX);
+	background->setScaleY(rY);
+	addChild(background, 0);
+
+	
 
 	CCLOG("onEnter");
 }
