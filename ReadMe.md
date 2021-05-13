@@ -1,14 +1,13 @@
 # Fruits Pang
-<p>
 본 프로젝트는 동서대학교 디지털콘텐츠학부 `게임플랫폼이해와활용` 강의에서 만든 퍼즐 게임입니다.
-</p>
+
 
 ## 주의사항 | Warning
 - **Cocos 엔진**
     - 이 repo는 cocos2d-x 엔진 코드가 포함되지 않습니다.
     - "cocos new" 명령어를 통해 새로운 cocos2d-x 프로젝트를 생성하세요.
     - 새로운 프로젝트에서 "cocos2d" 폴더를 복사해서 "fruits pang" 프로젝트에 붙여 넣으세요.
-    
+
 <img src="https://github.com/R2Road/cocos2dx_playground/blob/master/wiki/readme_01.png">
 </img>
 
