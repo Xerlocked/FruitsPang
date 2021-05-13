@@ -50,8 +50,8 @@ void Board::generateRandomBlock()
 			while(checkForMatch(block) == true)
 				block->setType((BlockType)random((int)BlockType::APPLE, (int)BlockType::BANANA));
 
-			block->setPosition(row * m_BlockSize.width + m_BlockSize.width * 0.5f,
-				col * m_BlockSize.height + m_BlockSize.height * 0.5f);
+			block->setPosition(row * m_CellSize.width + m_CellSize.width * 0.5f,
+				col * m_CellSize.height + m_CellSize.height * 3.0f);
 
 			addChild(block, 1);
 			blocks[row][col] = block;
@@ -59,6 +59,22 @@ void Board::generateRandomBlock()
 		}
 
 	}
+}
+
+void Board::generateCell()
+{
+	for (int col = 0; col < MAX_COL; col++)
+	{
+		for (int row = 0; row < MAX_ROW; row++)
+		{
+			GridCell* cell = GridCell::createCell(GridType::BASIC, { row, col });
+			cell->setPosition(row * m_CellSize.width + m_CellSize.width * 0.5f,
+				col * m_CellSize.height + m_CellSize.height * 3.0f);
+
+			addChild(cell,1);
+		}
+	}
+
 }
 
 Block* Board::getBlockForPosition(cocos2d::Vec2 pos)

@@ -11,14 +11,14 @@ const int MAX_MATCH = 3;
 /// <summary>
 /// Grid Size
 /// </summary>
-const int MAX_ROW = 7;
-const int MAX_COL = 7;
+const int MAX_ROW = 9;
+const int MAX_COL = 9;
 
 const int SWIPE_TRESHOLD = 5; // Minum pixels for swipe move
 
-const cocos2d::Size m_BlockSize = cocos2d::Size(80, 80);
+const cocos2d::Size m_BlockSize = cocos2d::Size(70, 70);
 
-const cocos2d::Size m_CellSize = cocos2d::Size(150, 150);
+const cocos2d::Size m_CellSize = cocos2d::Size(96, 96);
 
 enum class BlockType : int
 {
@@ -49,7 +49,7 @@ const std::map<BlockType, std::string> BlockTypeName
 
 const std::map<GridType, std::string> GridTypeName
 {
-	{GridType::BASIC, "BasicTile.png"}
+	{GridType::BASIC, "grid.png"}
 };
 
 typedef struct {

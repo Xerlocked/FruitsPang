@@ -23,6 +23,8 @@ bool GameScene::init()
 		return false;
 
 	CCLOG("init");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Images/data.plist");
+	Director::getInstance()->getTextureCache()->addImage("Images/GameSceneBackground.png");
 
 	return true;
 }
@@ -48,7 +50,42 @@ void GameScene::onEnter()
 	background->setScaleY(rY);
 	addChild(background, 0);
 
-	
+	board = Board::createBoard(MAX_ROW, MAX_COL);
+
+	board->setPosition(screenSize.width * 0.5f - board->getContentSize().width * 0.5f,
+		screenSize.height * 0.5f - board->getContentSize().height * 0.5f - 30);
+	addChild(board, 1);
+
+	board->generateCell();
+	board->generateRandomBlock();
 
 	CCLOG("onEnter");
+}
+
+void GameScene::swapBox(Block* first, Block* second)
+{
+}
+
+void GameScene::newGame(cocos2d::Ref* ref)
+{
+}
+
+void GameScene::checkForMatch(Block* first, Block* second)
+{
+}
+
+void GameScene::lockTouch(float time)
+{
+}
+
+void GameScene::unlockTouch(float delTime)
+{
+}
+
+void GameScene::resolveMatchForBlock(Block* block)
+{
+}
+
+void GameScene::onBoardReady(cocos2d::EventCustom* events)
+{
 }

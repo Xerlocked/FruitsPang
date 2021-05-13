@@ -16,6 +16,7 @@ public:
 
 	void removeAll(); // 모든 블록 제거
 	void generateRandomBlock(); // 랜덤블록 생성
+	void generateCell();
 	Block* getBlockForPosition(cocos2d::Vec2 pos); // 블록의 위치 얻기
 	bool isNeighbours(Block* first, Block* second); // 이웃하는가?
 	void swapBlock(Block* first, Block* second); // 블록 교체
