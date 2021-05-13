@@ -133,13 +133,13 @@ void GameScene::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events)
 	if (touchDist.x >= SWIPE_TRESHOLD && (activeBlock->boardPosition.row + 1 < MAX_ROW))
 		blockToSwap = board->blocks[activeBlock->boardPosition.row + 1][activeBlock->boardPosition.col];
 	//Left
-	if (touchDist.x <= SWIPE_TRESHOLD && (activeBlock->boardPosition.row > 0))
+	if (touchDist.x <= -SWIPE_TRESHOLD && (activeBlock->boardPosition.row > 0))
 		blockToSwap = board->blocks[activeBlock->boardPosition.row - 1][activeBlock->boardPosition.col];
 	//Up
 	if (touchDist.y >= SWIPE_TRESHOLD && (activeBlock->boardPosition.col + 1 < MAX_COL))
 		blockToSwap = board->blocks[activeBlock->boardPosition.row][activeBlock->boardPosition.col + 1];
 	//Down
-	if (touchDist.y <= SWIPE_TRESHOLD && (activeBlock->boardPosition.col > 0))
+	if (touchDist.y <= -SWIPE_TRESHOLD && (activeBlock->boardPosition.col > 0))
 		blockToSwap = board->blocks[activeBlock->boardPosition.row][activeBlock->boardPosition.col - 1];
 
 	if (blockToSwap != nullptr)

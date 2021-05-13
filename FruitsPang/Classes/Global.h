@@ -11,7 +11,7 @@ const int MAX_MATCH = 3;
 const int MAX_ROW = 9;
 const int MAX_COL = 9;
 
-const int SWIPE_TRESHOLD = 2; // Minum pixels for swipe move
+const int SWIPE_TRESHOLD = 5; // Minum pixels for swipe move
 
 const cocos2d::Size m_BlockSize = cocos2d::Size(70, 70);
 
