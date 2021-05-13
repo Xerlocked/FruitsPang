@@ -43,10 +43,10 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(320, 480);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(320, 480);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(768, 1024);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(1536, 2048);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1080, 1920);
+static cocos2d::Size smallResolutionSize = cocos2d::Size(1080, 1920);
+static cocos2d::Size mediumResolutionSize = cocos2d::Size(1440, 2560);
+static cocos2d::Size largeResolutionSize = cocos2d::Size(1440, 2560);
 
 AppDelegate::AppDelegate()
 {
@@ -85,6 +85,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
         glview = GLViewImpl::createWithRect("FruitsPang", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        CCLOG("WIDTH: %f , HEIGHT: %f", designResolutionSize.width, designResolutionSize.height);
+        glview->setFrameZoomFactor(0.45);
 #else
         glview = GLViewImpl::create("FruitsPang");
 #endif
@@ -92,10 +94,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    //director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0f / 60);
+    //director->setAnimationInterval(1.0f / 60);
 
     // Set the design resolution
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
