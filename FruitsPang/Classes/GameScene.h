@@ -14,9 +14,13 @@ public:
 	virtual void onEnter();
 
 private:
-	Block* activeBlock;
-	Board* board;
-	bool isBusy;
+	GameScene() = default;
+	~GameScene() = default;
+	GameScene(GameScene&) = default;
+
+	Block* activeBlock = nullptr;
+	Board* board = nullptr;
+	bool isBusy = false;
 	std::vector<BoardMove> availableMove;
 	
 	void swapBox(Block* first, Block* second);
@@ -26,8 +30,11 @@ private:
 	void unlockTouch(float delTime);
 	void resolveMatchForBlock(Block* block);
 
-	void onBoardReady(cocos2d::EventCustom* events);
 
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events);
+	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events);
+	void onBoardReady(cocos2d::EventCustom* events);
+	void onBoardMatch(cocos2d::EventCustom* events);
 };
 
 #endif // !_GAME_SCENE_H

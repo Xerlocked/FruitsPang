@@ -9,12 +9,17 @@
 class Board : public cocos2d::Layer
 {
 public:
+	Board() = default;
+	~Board() = default;
+	Board(const Board&) = default;
+
+public:
 	GridCell* cells[MAX_ROW][MAX_COL];
 	Block* blocks[MAX_ROW][MAX_COL];
 
 	static Board* createBoard(int rows, int cols); // 보드 생성
 
-	void removeAll(); // 모든 블록 제거
+	void removeAllBlocks(); // 모든 블록 제거
 	void generateRandomBlock(); // 랜덤블록 생성
 	void generateCell();
 	Block* getBlockForPosition(cocos2d::Vec2 pos); // 블록의 위치 얻기
@@ -22,7 +27,7 @@ public:
 	void swapBlock(Block* first, Block* second); // 블록 교체
 	
 	bool checkForMatch(Block* block); 
-	std::vector<Block*> findMatch(Block* block, bool isRoot = true);
+	int findMatch(Block* block, std::vector<Block*>& matches, bool isRoot = true);
 	
 	void removeBlockAt(BoardPosition pos); // 특정블록 제거
 	void fillBlanks(); // 빈곳 채우기
@@ -34,7 +39,6 @@ public:
 	bool isBusy() noexcept{ return busy; }
 
 private:
-	std::vector<Block*> matches;
 	bool busy;
 };
 

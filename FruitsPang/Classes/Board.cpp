@@ -4,22 +4,28 @@ USING_NS_CC;
 
 Board* Board::createBoard(int rows, int cols)
 {
-	Board* board = new Board();
+	Board* board = nullptr;
 
-	if (board->init())
+	try
 	{
+		board = new Board();
+		if (!board->init())
+			throw std::bad_alloc();
 		board->autorelease();
-
 		board->setContentSize(Size(rows * m_CellSize.width, cols * m_CellSize.height));
 		board->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
 		return board;
 	}
+	catch (...)
+	{
+		CC_SAFE_DELETE(board);
+		throw;
 
-	return nullptr;
+	}
 }
 
-void Board::removeAll()
+void Board::removeAllBlocks()
 {
 	stopAllActions();
 	busy = false;
@@ -51,7 +57,7 @@ void Board::generateRandomBlock()
 				block->setType((BlockType)random((int)BlockType::APPLE, (int)BlockType::BANANA));
 
 			block->setPosition(row * m_CellSize.width + m_CellSize.width * 0.5f,
-				col * m_CellSize.height + m_CellSize.height * 3.0f);
+				col * m_CellSize.height + m_CellSize.height * 0.5f);
 
 			addChild(block, 1);
 			blocks[row][col] = block;
@@ -67,9 +73,9 @@ void Board::generateCell()
 	{
 		for (int row = 0; row < MAX_ROW; row++)
 		{
-			GridCell* cell = GridCell::createCell(GridType::BASIC, { row, col });
+			GridCell* cell = GridCell::createCell(CellType::BASIC, { row, col });
 			cell->setPosition(row * m_CellSize.width + m_CellSize.width * 0.5f,
-				col * m_CellSize.height + m_CellSize.height * 3.0f);
+				col * m_CellSize.height + m_CellSize.height * 0.5f);
 
 			addChild(cell,1);
 		}
@@ -79,8 +85,8 @@ void Board::generateCell()
 
 Block* Board::getBlockForPosition(cocos2d::Vec2 pos)
 {
-	unsigned int row = (unsigned int)ceil((pos.x - getPosition().x) / m_BlockSize.width) - 1;
-	unsigned int col = (unsigned int)ceil((pos.y - getPosition().y) / m_BlockSize.height) - 1;
+	unsigned int row = (unsigned int)ceil((pos.x - getPosition().x) / m_CellSize.width) - 1;
+	unsigned int col = (unsigned int)ceil((pos.y - getPosition().y) / m_CellSize.height) - 1;
 
 	CCASSERT((col < MAX_COL&& row < MAX_ROW), "INCORRECT ROW/COL, INDEX OUT OF RANGE");
 
@@ -95,8 +101,8 @@ bool Board::isNeighbours(Block* first, Block* second)
 	if (!first || !second)
 		return false;
 
-	int x = abs(first->boardPos.row - second->boardPos.row);
-	int y = abs(first->boardPos.col - second->boardPos.col);
+	int x = abs(first->boardPosition.row - second->boardPosition.row);
+	int y = abs(first->boardPosition.col - second->boardPosition.col);
 
 	return (x == 1 && y == 0) || (x == 0 && y == 1);
 }
@@ -109,19 +115,19 @@ void Board::swapBlock(Block* first, Block* second)
 	if (!isNeighbours(first, second))
 	{
 		CCLOGERROR("BLOCKS [%d, %d] and [%d, %d] are not neighbours!",
-			first->boardPos.row,
-			first->boardPos.col,
-			second->boardPos.row,
-			second->boardPos.col);
+			first->boardPosition.row,
+			first->boardPosition.col,
+			second->boardPosition.row,
+			second->boardPosition.col);
 		return;
 	}
 
-	blocks[first->boardPos.row][first->boardPos.col] = second;
-	blocks[second->boardPos.row][second->boardPos.col] = first;
+	blocks[first->boardPosition.row][first->boardPosition.col] = second;
+	blocks[second->boardPosition.row][second->boardPosition.col] = first;
 
-	BoardPosition t_pos = first->boardPos;
-	first->boardPos = second->boardPos;
-	second->boardPos = t_pos;
+	BoardPosition t_pos = first->boardPosition;
+	first->boardPosition = second->boardPosition;
+	second->boardPosition = t_pos;
 }
 
 bool Board::checkForMatch(Block* block)
@@ -129,7 +135,7 @@ bool Board::checkForMatch(Block* block)
 	if (!block)
 		return false;
 
-	BoardPosition bp = block->boardPos;
+	BoardPosition bp = block->boardPosition;
 
 	int match = 1;
 	int row = bp.row;
@@ -157,14 +163,14 @@ bool Board::checkForMatch(Block* block)
 	return (match >= MAX_MATCH);
 }
 
-std::vector<Block*> Board::findMatch(Block* block, bool isRoot)
+int Board::findMatch(Block* block, std::vector<Block*> &matches, bool isRoot)
 {
 	if (isRoot)
 		matches.clear();
 
 	matches.push_back(block);
 
-	BoardPosition bp = block->boardPos;
+	BoardPosition bp = block->boardPosition;
 
 	Block* leftBlock = (bp.row > 0) ? blocks[bp.row - 1][bp.col] : nullptr;
 	Block* rightBlock = (bp.row < MAX_ROW - 1) ? blocks[bp.row + 1][bp.col] : nullptr;
@@ -175,31 +181,31 @@ std::vector<Block*> Board::findMatch(Block* block, bool isRoot)
 	if (leftBlock && leftBlock->getType() == block->getType())
 	{
 		if (std::find(matches.begin(), matches.end(), leftBlock) == matches.end())
-			findMatch(leftBlock, false);
+			findMatch(leftBlock, matches, false);
 	}
 
 	// Right
 	if (rightBlock && rightBlock->getType() == block->getType())
 	{
 		if (std::find(matches.begin(), matches.end(), rightBlock) == matches.end())
-			findMatch(rightBlock, false);
+			findMatch(rightBlock, matches, false);
 	}
 
 	// TOP
 	if (topBlock && topBlock->getType() == block->getType())
 	{
 		if (std::find(matches.begin(), matches.end(), topBlock) == matches.end())
-			findMatch(topBlock, false);
+			findMatch(topBlock, matches, false);
 	}
 
 	// BOTTOM
 	if (bottomBlock && bottomBlock->getType() == block->getType())
 	{
 		if (std::find(matches.begin(), matches.end(), bottomBlock) == matches.end())
-			findMatch(bottomBlock, false);
+			findMatch(bottomBlock, matches, false);
 	}
 
-	return matches;
+	return matches.size();
 }
 
 void Board::removeBlockAt(BoardPosition pos)
@@ -208,7 +214,6 @@ void Board::removeBlockAt(BoardPosition pos)
 	if (block)
 	{
 		blocks[pos.row][pos.col] = nullptr;
-		block->setType(BlockType::NONE);
 		removeChild(block, true);
 	}
 }
@@ -231,11 +236,11 @@ void Board::fillBlanks()
 				int new_col = col - blanks;
 				blocks[row][col]->runAction(EaseBounceOut::create(MoveTo::create(0.7f,
 						Vec2(blocks[row][col]->getPositionX(),
-						new_col * m_BlockSize.height + m_BlockSize.height * 0.5f))));
+						new_col * m_CellSize.height + m_CellSize.height * 0.5f))));
 
 				blocks[row][new_col] = blocks[row][col];
 				blocks[row][col] = nullptr;
-				blocks[row][new_col]->boardPos = { row, new_col };
+				blocks[row][new_col]->boardPosition = { row, new_col };
 
 				addedBlocks.push_back(blocks[row][new_col]);
 			}
@@ -245,11 +250,11 @@ void Board::fillBlanks()
 		{
 			int new_col = MAX_COL - blanks - 1;
 			Block* block = Block::createBlock((BlockType)random((int)BlockType::APPLE, (int)BlockType::BANANA), { row, new_col });
-			Vec2 newPosition = Vec2(row * m_BlockSize.width + m_BlockSize.width * 0.5f,
-				new_col * m_BlockSize.height + m_BlockSize.height * 0.5f);
+			Vec2 newPosition = Vec2(row * m_CellSize.width + m_CellSize.width * 0.5f,
+				new_col * m_CellSize.height + m_CellSize.height * 0.5f);
 			block->setPositionX(newPosition.x);
-			block->setPositionY(getContentSize().height + (MAX_COL - blanks) * m_BlockSize.height * 0.5f);
-			block->boardPos = { row, new_col };
+			block->setPositionY(getContentSize().height + (MAX_COL - blanks) * m_CellSize.height * 0.5f);
+			block->boardPosition = { row, new_col };
 			block->runAction(EaseBounceOut::create(MoveTo::create(0.7f, newPosition)));
 
 			addChild(block, 1);
@@ -268,43 +273,45 @@ void Board::fillBlanks()
 
 void Board::resolveMatchForBlocks(std::vector<Block*> blocks)
 {
-	bool hasMatch = false;
+	int numMatches = 0;
 	std::vector<Block*> blocksToRemove;
 
-	for (int i = 0; i < blocks.size(); i++)
+	for (auto block : blocks)
 	{
-		Block* block = blocks.at(i);
-
-		if (block && block->getType() != BlockType::NONE && checkForMatch(block))
+		if (checkForMatch(block))
 		{
-			hasMatch = true;
-			for (auto match : findMatch(block))
+			std::vector<Block*> matches;
+			numMatches += findMatch(block, matches);
+
+			for (auto match : matches)
 			{
 				if (std::find(blocksToRemove.begin(), blocksToRemove.end(), match) == blocksToRemove.end())
 					blocksToRemove.push_back(match);
 			}
-		}
 
+		}
 	}
 
-	if (hasMatch)
+	if (numMatches > 0)
 	{
-		EventCustom hasMatchEvent(EVENT_HAS_MATCH);
+		EventCustom haveMatchEvent(EVENT_HAS_MATCH);
 		EventMatchesData em;
-		em.matches = (int)blocksToRemove.size();
-		hasMatchEvent.setUserData((void*)&em);
-		_eventDispatcher->dispatchEvent(&hasMatchEvent);
-
+		em.matches = numMatches;
+		haveMatchEvent.setUserData((void*)&em);
+		_eventDispatcher->dispatchEvent(&haveMatchEvent);
 
 		for (auto block : blocksToRemove)
-			removeBlockAt(block->boardPos);
+		{
+			removeBlockAt(block->boardPosition);
+		}
 
 		fillBlanks();
 	}
 	else
 	{
-		EventCustom ReadyEvent(EVENT_READY);
-		_eventDispatcher->dispatchEvent(&ReadyEvent);
+		EventCustom ReadyMatchEvent(EVENT_READY);
+		_eventDispatcher->dispatchEvent(&ReadyMatchEvent);
+
 		busy = false;
 	}
 }
@@ -328,7 +335,7 @@ std::vector<BoardMove> Board::findAvailableMove()
 				swapBlock(block, other);
 
 				if (checkForMatch(block) || checkForMatch(other))
-					availableMove.push_back({ other->boardPos, block->boardPos });
+					availableMove.push_back({ other->boardPosition, block->boardPosition });
 
 				swapBlock(other, block);
 			}
@@ -340,7 +347,7 @@ std::vector<BoardMove> Board::findAvailableMove()
 				swapBlock(block, other);
 
 				if (checkForMatch(block) || checkForMatch(other))
-					availableMove.push_back({ other->boardPos, block->boardPos });
+					availableMove.push_back({ other->boardPosition, block->boardPosition });
 
 				swapBlock(other, block);
 			}

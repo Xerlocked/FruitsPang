@@ -4,25 +4,30 @@ USING_NS_CC;
 
 Block* Block::createBlock(BlockType Type, BoardPosition pos)
 {
-	Block* block = new Block();
+	Block* block = nullptr;
 
-	if (block->init())
+	try
 	{
+		block = new Block();
+		if (!block->init())
+			throw std::bad_alloc();
 		block->autorelease();
 		block->type = Type;
-		block->boardPos = pos;
-
+		block->boardPosition = pos;
 		return block;
 	}
-
-	return nullptr;
+	catch (...)
+	{
+		CC_SAFE_DELETE(block);
+		throw;
+	}
 }
 
 void Block::setActive(bool isActive)
 {
 	if (isActive)
 	{
-		blockSprite->setContentSize(blockSprite->getContentSize() * 0.25f);
+		//blockSprite->setContentSize(blockSprite->getContentSize() * 1.5f);
 	}
 	
 }
@@ -35,8 +40,8 @@ void Block::setType(BlockType Type)
 {
 	this->type = Type;
 
-	if (blockSprite != nullptr && Type != BlockType::NONE)
-		blockSprite->setSpriteFrame(BlockTypeName.at(Type));
+	if (blockSprite != nullptr)
+		blockSprite->setSpriteFrame(BlockTypeName[static_cast<int>(type)]);
 
 }
 
@@ -51,7 +56,7 @@ void Block::onEnter()
 	setContentSize(m_BlockSize);
 	setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
-	blockSprite = Sprite::createWithSpriteFrameName(BlockTypeName.at(type));
+	blockSprite = Sprite::createWithSpriteFrameName(BlockTypeName[static_cast<int>(type)]);
 	blockSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	blockSprite->setPosition(m_BlockSize * 0.5f);
 	addChild(blockSprite, 1);

@@ -2,28 +2,33 @@
 
 USING_NS_CC;
 
-GridCell* GridCell::createCell(GridType Type, BoardPosition Pos)
+GridCell* GridCell::createCell(CellType Type, BoardPosition Pos)
 {
-	GridCell* cell = new GridCell();
+	GridCell* cell = nullptr;
 
-	if (cell->init())
+	try
 	{
+		cell = new GridCell();
+		if (!cell->init())
+			throw std::bad_alloc();
 		cell->autorelease();
 		cell->type = Type;
-		cell->boardPos = Pos;
-
+		cell->boardPosition = Pos;
 		return cell;
 	}
-
-	return nullptr;
+	catch (...)
+	{
+		CC_SAFE_DELETE(cell);
+		throw;
+	}
 }
 
-void GridCell::setType(GridType Type)
+void GridCell::setType(CellType Type)
 {
 	this->type = Type;
 	
-	if (cellSprite != nullptr && Type != GridType::NONE)
-		cellSprite->setSpriteFrame(GridTypeName.at(Type));
+	if (cellSprite != nullptr)
+		cellSprite->setSpriteFrame(CellTypeName[static_cast<int>(type)]);
 
 }
 
@@ -34,7 +39,7 @@ void GridCell::onEnter()
 	setContentSize(m_CellSize);
 	setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
-	cellSprite = Sprite::createWithSpriteFrameName(GridTypeName.at(type));
+	cellSprite = Sprite::createWithSpriteFrameName(CellTypeName[static_cast<int>(type)]);
 	cellSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	cellSprite->setPosition(m_CellSize * 0.5f);
 	addChild(cellSprite, 0);

@@ -33,7 +33,9 @@
     <ClCompile Include="..\Classes\Block.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\GridCell.cpp" />
+    <ClCompile Include="..\Classes\GridCell.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -60,7 +62,9 @@
     <ClInclude Include="..\Classes\Block.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\GridCell.h" />
+    <ClInclude Include="..\Classes\GridCell.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
