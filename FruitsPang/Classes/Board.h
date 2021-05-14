@@ -40,6 +40,8 @@ public:
 
 private:
 	bool busy;
+	int binaryX[8] = { 0, 1, 0, -1, 0, 2, 0, -2 };
+	int binaryY[8] = { 1, 0, -1, 0, 2, 0, -2, 0 };
 };
 
 #endif // !BOARD_H

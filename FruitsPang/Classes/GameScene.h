@@ -23,7 +23,7 @@ private:
 	bool isBusy = false;
 	std::vector<BoardMove> availableMove;
 	
-	void swapBox(Block* first, Block* second);
+	void swipeBlock(Block* first, Block* second);
 	void newGame(cocos2d::Ref* ref);
 	void checkForMatch(Block* first, Block* second);
 	void lockTouch(float time);

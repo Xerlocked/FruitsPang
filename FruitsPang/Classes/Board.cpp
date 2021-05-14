@@ -168,42 +168,60 @@ int Board::findMatch(Block* block, std::vector<Block*> &matches, bool isRoot)
 	if (isRoot)
 		matches.clear();
 
+	int leftCount	= 0;
+	int rightCount	= 0;
+	int upCount		= 0;
+	int downCount	= 0;
+
 	matches.push_back(block);
 
 	BoardPosition bp = block->boardPosition;
 
-	Block* leftBlock = (bp.row > 0) ? blocks[bp.row - 1][bp.col] : nullptr;
-	Block* rightBlock = (bp.row < MAX_ROW - 1) ? blocks[bp.row + 1][bp.col] : nullptr;
-	Block* topBlock = (bp.col < MAX_COL - 1) ? blocks[bp.row][bp.col + 1] : nullptr;
-	Block* bottomBlock = (bp.col > 0) ? blocks[bp.row][bp.col - 1] : nullptr;
-
-	// Left
-	if (leftBlock && leftBlock->getType() == block->getType())
+	// 1. 오른쪽 방향
+	for (int i = bp.row + 1; i < MAX_ROW; i++)
 	{
-		if (std::find(matches.begin(), matches.end(), leftBlock) == matches.end())
-			findMatch(leftBlock, matches, false);
+		if (blocks[i][bp.col] == nullptr || blocks[i][bp.col]->getType() != block->getType())
+			break;
+
+		matches.push_back(blocks[i][bp.col]);
+		rightCount++;
 	}
 
-	// Right
-	if (rightBlock && rightBlock->getType() == block->getType())
+	// 2. 왼쪽 방향
+	for (int i = bp.row - 1; i >= 0; i--)
 	{
-		if (std::find(matches.begin(), matches.end(), rightBlock) == matches.end())
-			findMatch(rightBlock, matches, false);
+		if (blocks[i][bp.col] == nullptr || blocks[i][bp.col]->getType() != block->getType())
+			break;
+
+		matches.push_back(blocks[i][bp.col]);
+		leftCount++;
 	}
 
-	// TOP
-	if (topBlock && topBlock->getType() == block->getType())
+	if ((leftCount == 1 && rightCount == 0) || (leftCount == 0 && rightCount == 1)) // 미완성 L자 판별 
+		matches.pop_back();
+
+	// 3. 위쪽 방향
+	for (int i = bp.col + 1; i < MAX_COL; i++)
 	{
-		if (std::find(matches.begin(), matches.end(), topBlock) == matches.end())
-			findMatch(topBlock, matches, false);
+		if (blocks[bp.row][i] == nullptr || blocks[bp.row][i]->getType() != block->getType())
+			break;
+
+		matches.push_back(blocks[bp.row][i]);
+		upCount++;
 	}
 
-	// BOTTOM
-	if (bottomBlock && bottomBlock->getType() == block->getType())
+	// 4. 아래쪽 방향
+	for (int i = bp.col - 1; i >= 0; i--)
 	{
-		if (std::find(matches.begin(), matches.end(), bottomBlock) == matches.end())
-			findMatch(bottomBlock, matches, false);
+		if (blocks[bp.row][i] == nullptr || blocks[bp.row][i]->getType() != block->getType())
+			break;
+
+		matches.push_back(blocks[bp.row][i]);
+		downCount++;
 	}
+
+	if ((upCount == 0 && downCount == 1) || (upCount == 1 && downCount == 0)) // 미완성 L자 판별 
+		matches.pop_back();
 
 	return matches.size();
 }

@@ -88,7 +88,7 @@ bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
 	{
 		if (board->isNeighbours(activeBlock, block))
 		{
-			swapBox(block, activeBlock);
+			swipeBlock(block, activeBlock);
 			runAction(Sequence::create(DelayTime::create(0.3f),
 				CallFunc::create(CC_CALLBACK_0(GameScene::checkForMatch, this, activeBlock, block)),
 				nullptr));
@@ -144,7 +144,7 @@ void GameScene::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events)
 
 	if (blockToSwap != nullptr)
 	{
-		swapBox(blockToSwap, activeBlock);
+		swipeBlock(blockToSwap, activeBlock);
 		runAction(Sequence::create(DelayTime::create(0.3f),
 			CallFunc::create(CC_CALLBACK_0(GameScene::checkForMatch, this, activeBlock, blockToSwap)),
 			nullptr));
@@ -155,7 +155,7 @@ void GameScene::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events)
 
 }
 
-void GameScene::swapBox(Block* first, Block* second)
+void GameScene::swipeBlock(Block* first, Block* second)
 {
 	lockTouch(0.3f);
 	board->swapBlock(first, second);
@@ -180,9 +180,9 @@ void GameScene::checkForMatch(Block* first, Block* second)
 	bool firstMatch = board->checkForMatch(first);
 	bool secondMatch = board->checkForMatch(second);
 
-	if (firstMatch == false && secondMatch == false)
+	if (!firstMatch && !secondMatch) // 둘다 미스매치 - 원상복구
 	{
-		swapBox(first, second);
+		swipeBlock(first, second);
 		return;
 	}
 
