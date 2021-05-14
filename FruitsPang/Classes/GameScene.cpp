@@ -67,6 +67,8 @@ void GameScene::onEnter()
 		screenSize.height * 0.5f - board->getContentSize().height * 0.5f + 180);
 	addChild(board, 1);
 
+	playMode = GameType::NORMAL;
+
 	board->generateCell();
 	newGame(this);
 
@@ -76,6 +78,13 @@ void GameScene::onEnter()
 bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
 {
 	Vec2 touchPoint = touch->getLocation();
+
+	if (playMode == GameType::REVERSE)
+	{
+		touchPoint.x = 1080 - touchPoint.x;
+		touchPoint.y = 1780 - touchPoint.y;
+	}
+
 	CCLOG("current: [%f,%f]", touch->getLocation().x, touch->getLocation().y);
 	if (isBusy || board->isBusy() || board->getBoundingBox().containsPoint(touchPoint) == false)
 		return false;

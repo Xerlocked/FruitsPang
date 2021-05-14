@@ -17,6 +17,13 @@ const cocos2d::Size m_BlockSize = cocos2d::Size(70, 70);
 
 const cocos2d::Size m_CellSize = cocos2d::Size(96, 96);
 
+enum class GameType : int
+{
+	NORMAL = 0,
+	REVERSE,
+	BLINK
+};
+
 enum class BlockType : int
 {
 	APPLE = 0,

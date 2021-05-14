@@ -21,6 +21,7 @@ private:
 	Block* activeBlock = nullptr;
 	Board* board = nullptr;
 	bool isBusy = false;
+	GameType playMode;
 	std::vector<BoardMove> availableMove;
 	
 	void swipeBlock(Block* first, Block* second);
