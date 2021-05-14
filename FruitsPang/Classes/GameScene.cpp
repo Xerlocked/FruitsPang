@@ -239,6 +239,11 @@ void GameScene::resolveMatchForBlock(Block* block)
 	}
 }
 
+void GameScene::onBlink(float t)
+{
+	
+}
+
 void GameScene::onBoardReady(cocos2d::EventCustom* events)
 {
 	availableMove = board->findAvailableMove();

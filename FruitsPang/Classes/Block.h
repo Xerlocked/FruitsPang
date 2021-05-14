@@ -14,7 +14,7 @@ public:
 
 	static Block* createBlock(BlockType Type, BoardPosition pos);
 	void setActive(bool isActive);
-	void Blink(int times = 3);
+	void Blink();
 
 	BlockType getType() noexcept{ return type; }
 

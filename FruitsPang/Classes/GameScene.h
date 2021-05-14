@@ -31,6 +31,7 @@ private:
 	void unlockTouch(float delTime);
 	void resolveMatchForBlock(Block* block);
 
+	void onBlink(float t);
 
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events);

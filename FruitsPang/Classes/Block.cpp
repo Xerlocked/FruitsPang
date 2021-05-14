@@ -32,8 +32,17 @@ void Block::setActive(bool isActive)
 	
 }
 
-void Block::Blink(int times)
+void Block::Blink()
 {
+	auto fadeout = FadeOut::create(3.0);
+	auto reverse = fadeout->reverse();
+
+	auto Seq = Sequence::create(fadeout, DelayTime::create(1.5f) , reverse, nullptr);
+
+	auto actionRepeat = RepeatForever::create(Seq);
+
+	blockSprite->runAction(actionRepeat);
+
 }
 
 void Block::setType(BlockType Type)
