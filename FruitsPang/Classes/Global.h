@@ -3,8 +3,10 @@
 
 #include "cocos2d.h"
 
-const auto EVENT_READY = "event.custom.is_ready";
-const auto EVENT_HAS_MATCH = "event.custom.has_match";
+const auto EVENT_READY		= "event.custom.is_ready";
+const auto EVENT_HAS_MATCH	= "event.custom.has_match";
+const auto EVENT_FADE_OUT	= "event.custom.fade.out";
+const auto EVENT_FADE_IN	= "event.custom.fade.in";
 
 const int MAX_MATCH = 3;
 

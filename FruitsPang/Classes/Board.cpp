@@ -60,7 +60,6 @@ void Board::generateRandomBlock()
 				col * m_CellSize.height + m_CellSize.height * 0.5f);
 
 			addChild(block, 1);
-			block->Blink();
 			blocks[row][col] = block;
 
 		}
@@ -277,7 +276,6 @@ void Board::fillBlanks()
 			block->runAction(EaseBounceOut::create(MoveTo::create(0.7f, newPosition)));
 
 			addChild(block, 1);
-			block->Blink();
 			blocks[row][new_col] = block;
 			addedBlocks.push_back(block);
 		}

@@ -32,17 +32,16 @@ void Block::setActive(bool isActive)
 	
 }
 
-void Block::Blink()
+void Block::actionFadeIn()
+{
+	auto fadein = FadeIn::create(5.0);
+	blockSprite->runAction(fadein);
+}
+
+void Block::actionFadeOut()
 {
 	auto fadeout = FadeOut::create(3.0);
-	auto reverse = fadeout->reverse();
-
-	auto Seq = Sequence::create(fadeout, DelayTime::create(1.5f) , reverse, nullptr);
-
-	auto actionRepeat = RepeatForever::create(Seq);
-
-	blockSprite->runAction(actionRepeat);
-
+	blockSprite->runAction(fadeout);
 }
 
 void Block::setType(BlockType Type)
@@ -51,7 +50,6 @@ void Block::setType(BlockType Type)
 
 	if (blockSprite != nullptr)
 		blockSprite->setSpriteFrame(BlockTypeName[static_cast<int>(type)]);
-
 }
 
 void Block::explode()
@@ -62,6 +60,12 @@ void Block::onEnter()
 {
 	Node::onEnter();
 
+	auto blinkOnListener = EventListenerCustom::create(EVENT_FADE_IN, CC_CALLBACK_0(Block::actionFadeIn, this));
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(blinkOnListener, this);
+
+	auto blinkOffListener = EventListenerCustom::create(EVENT_FADE_OUT, CC_CALLBACK_0(Block::actionFadeOut, this));
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(blinkOffListener, this);
+
 	setContentSize(m_BlockSize);
 	setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
@@ -69,4 +73,9 @@ void Block::onEnter()
 	blockSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	blockSprite->setPosition(m_BlockSize * 0.5f);
 	addChild(blockSprite, 1);
+
+
+
+
+
 }
