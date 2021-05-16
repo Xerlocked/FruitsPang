@@ -8,6 +8,8 @@ const auto EVENT_HAS_MATCH	= "event.custom.has_match";
 const auto EVENT_FADE_OUT	= "event.custom.fade.out";
 const auto EVENT_FADE_IN	= "event.custom.fade.in";
 
+//const auto COLOR_BROWN = cocos2d::Color3B(173,138,122);
+
 const int MAX_MATCH = 3;
 
 const int MAX_ROW = 9;
@@ -19,12 +21,14 @@ const cocos2d::Size m_BlockSize = cocos2d::Size(70, 70);
 
 const cocos2d::Size m_CellSize = cocos2d::Size(96, 96);
 
-enum class GameType : int
+enum PLAYMODE
 {
-	NORMAL = 0,
+	NORAML = 0,
 	REVERSE,
 	BLINK
 };
+
+static short GLOBAL_PLAYMODE = PLAYMODE::NORAML;
 
 enum class BlockType : int
 {

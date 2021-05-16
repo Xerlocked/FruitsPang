@@ -13,17 +13,22 @@ public:
 	virtual bool init();
 	virtual void onEnter();
 
+	
+
 private:
 	GameScene() = default;
 	~GameScene() = default;
 	GameScene(GameScene&) = default;
 
+	cocos2d::ProgressTimer* ui_timer;
+	cocos2d::Label* ui_timer_label;
 	Block* activeBlock = nullptr;
 	Board* board = nullptr;
 	bool isBusy = false;
-	GameType playMode;
 	std::vector<BoardMove> availableMove;
 	
+	float _RemainTime;
+
 	void swipeBlock(Block* first, Block* second);
 	void newGame(cocos2d::Ref* ref);
 	void checkForMatch(Block* first, Block* second);
@@ -32,6 +37,8 @@ private:
 	void resolveMatchForBlock(Block* block);
 
 	void onBlink(float t);
+	void setTimer();
+	void updateTimer(float t);
 
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events);
