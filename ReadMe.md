@@ -1,6 +1,9 @@
 # Fruits Pang
 본 프로젝트는 동서대학교 디지털콘텐츠학부 `게임플랫폼이해와활용` 강의에서 만든 퍼즐 게임입니다.
 
+프로젝트 게임씬 Mockup
+<img src="https://user-images.githubusercontent.com/25312114/118397590-c5338a80-b68f-11eb-9ae3-bca214141182.png"/>
+
 
 ## 주의사항 | Warning
 - **Cocos 엔진**
