@@ -22,11 +22,13 @@ private:
 
 	cocos2d::ProgressTimer* ui_timer;
 	cocos2d::Label* ui_timer_label;
+	cocos2d::Label* ui_score;
 	Block* activeBlock = nullptr;
 	Board* board = nullptr;
 	bool isBusy = false;
 	std::vector<BoardMove> availableMove;
 	
+	int		currentScore = 0;
 	float _RemainTime;
 
 	void swipeBlock(Block* first, Block* second);
@@ -35,6 +37,7 @@ private:
 	void lockTouch(float time);
 	void unlockTouch(float delTime);
 	void resolveMatchForBlock(Block* block);
+	void addScore(int score);
 
 	void onBlink(float t);
 	void setTimer();

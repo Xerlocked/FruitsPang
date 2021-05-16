@@ -68,7 +68,7 @@ void GameScene::onEnter()
 	addChild(ui_title, 1);
 
 	/// Score - Maplestory-light.ttf
-	auto ui_score = Label::createWithTTF("123,456", "fonts/Maplestory-Light.ttf", 40);
+	ui_score = Label::createWithTTF("0", "fonts/Maplestory-Light.ttf", 40);
 	ui_score->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	ui_score->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height - 10));
 	ui_score->setTextColor(Color4B(173, 138, 122, 255));
@@ -269,12 +269,27 @@ void GameScene::resolveMatchForBlock(Block* block)
 	std::vector<Block*> matches;
 
 	int num_matches = board->findMatch(block, matches);
-	// 점수 추가
+
+	addScore(num_matches * 100);
 
 	for (auto match : matches)
 	{
 		board->removeBlockAt(match->boardPosition);
 	}
+}
+
+void GameScene::addScore(int score)
+{
+	//char str_score[512];
+	//snprintf(str_score, 512, "%d", currentScore);
+	//ui_score->setString(str_score);
+
+	auto risingScore = ActionFloat::create(1.5f, currentScore, currentScore + score, [&](int value)
+		{
+			ui_score->setString(std::to_string(value)); 
+		});
+	runAction(risingScore);
+	currentScore += score;
 }
 
 void GameScene::onBlink(float t)
@@ -302,8 +317,8 @@ void GameScene::updateTimer(float t)
 		ui_timer_label->setString("0");
 	}
 	
-	char str[10] = {0};
-	sprintf(str, "%2.0f", _RemainTime);
+	char str[10];
+	snprintf(str,sizeof(str), "%2.0f", _RemainTime);
 	ui_timer_label->setString(str);
 
 }
@@ -318,5 +333,5 @@ void GameScene::onBoardReady(cocos2d::EventCustom* events)
 void GameScene::onBoardMatch(cocos2d::EventCustom* events)
 {
 	EventMatchesData* em = (EventMatchesData*)events->getUserData();
-	// 점수 추가
+	addScore(em->matches);
 }

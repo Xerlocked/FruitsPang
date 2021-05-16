@@ -314,7 +314,7 @@ void Board::resolveMatchForBlocks(std::vector<Block*> blocks)
 	{
 		EventCustom haveMatchEvent(EVENT_HAS_MATCH);
 		EventMatchesData em;
-		em.matches = numMatches;
+		em.matches = numMatches * 200;
 		haveMatchEvent.setUserData((void*)&em);
 		_eventDispatcher->dispatchEvent(&haveMatchEvent);
 
