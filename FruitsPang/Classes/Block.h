@@ -14,7 +14,8 @@ public:
 
 	static Block* createBlock(BlockType Type, BoardPosition pos);
 	void setActive(bool isActive);
-	void Blink(int times = 3);
+	void actionFadeOut();
+	void actionFadeIn();
 
 	BlockType getType() noexcept{ return type; }
 

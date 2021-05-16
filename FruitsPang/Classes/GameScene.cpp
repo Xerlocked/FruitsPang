@@ -23,7 +23,7 @@ bool GameScene::init()
 		return false;
 
 	CCLOG("init");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Images/data.plist");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Images/Data.plist");
 	Director::getInstance()->getTextureCache()->addImage("Images/GameSceneBackground.png");
 
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -50,7 +50,7 @@ void GameScene::onEnter()
 	Size screenSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-
+	/// Background - Size : 1440x2280
 	auto background = Sprite::create("Images/GameSceneBackground.png");
 	background->setPosition(origin.x + screenSize.width / 2, origin.y + screenSize.height / 2);
 	
@@ -61,16 +61,54 @@ void GameScene::onEnter()
 	background->setScaleY(rY);
 	addChild(background, 0);
 
-	board = Board::createBoard(MAX_ROW, MAX_COL);
+	/// Title - Fruits Pang 
+	auto ui_title = Sprite::createWithSpriteFrameName("GameTitle.png");
+	ui_title->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_title->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height + 120));
+	addChild(ui_title, 1);
 
+	/// Score - Maplestory-light.ttf
+	auto ui_score = Label::createWithTTF("123,456", "fonts/Maplestory-Light.ttf", 40);
+	ui_score->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_score->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height - 10));
+	ui_score->setTextColor(Color4B(173, 138, 122, 255));
+	addChild(ui_score, 1);
+
+	/// Progressbar - Background
+	auto ui_timer_bg = Sprite::createWithSpriteFrameName("Progressbar_bg.png");
+	ui_timer_bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_timer_bg->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height * 0.2f + 10));
+
+	ui_timer_label = Label::createWithTTF("60", "fonts/Jellee-Roman.ttf", 56);
+	ui_timer_label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_timer_label->setPosition(Vec2(ui_timer_bg->getContentSize().width * 0.5f, ui_timer_bg->getContentSize().height * 0.5f));
+	ui_timer_label->setTextColor(Color4B::WHITE);
+	ui_timer_label->setLocalZOrder(99);
+	ui_timer_bg->addChild(ui_timer_label);
+
+	addChild(ui_timer_bg, 1);
+
+	/// Progressbar - Timer
+	auto ui_timer_bar = Sprite::createWithSpriteFrameName("Progressbar.png");
+	ui_timer = ProgressTimer::create(ui_timer_bar);
+	//ui_timer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_timer->setPosition(Vec2(ui_timer_bg->getContentSize().width * 0.5f, ui_timer_bg->getContentSize().height * 0.5f));
+	ui_timer->setType(ProgressTimerType::BAR);
+	ui_timer->setBarChangeRate(Vec2(1, 0));
+	ui_timer->setMidpoint(Vec2(0, 0.5f));
+	ui_timer->setPercentage(100.0f);
+	ui_timer_bg->addChild(ui_timer);
+
+	/// Board - 9x9
+	board = Board::createBoard(MAX_ROW, MAX_COL);
 	board->setPosition(screenSize.width * 0.5f - board->getContentSize().width * 0.5f,
 		screenSize.height * 0.5f - board->getContentSize().height * 0.5f + 180);
 	addChild(board, 1);
 
-	playMode = GameType::NORMAL;
-
 	board->generateCell();
 	newGame(this);
+
+	setTimer();
 
 	CCLOG("onEnter");
 }
@@ -79,7 +117,7 @@ bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
 {
 	Vec2 touchPoint = touch->getLocation();
 
-	if (playMode == GameType::REVERSE)
+	if (GLOBAL_PLAYMODE == PLAYMODE::REVERSE)
 	{
 		touchPoint.x = 1080 - touchPoint.x;
 		touchPoint.y = 1780 - touchPoint.y;
@@ -237,6 +275,37 @@ void GameScene::resolveMatchForBlock(Block* block)
 	{
 		board->removeBlockAt(match->boardPosition);
 	}
+}
+
+void GameScene::onBlink(float t)
+{
+	
+}
+
+void GameScene::setTimer()
+{
+	ui_timer->runAction(ProgressFromTo::create(60, 100, 0));
+
+	_RemainTime = 60.0f;
+
+	schedule(schedule_selector(GameScene::updateTimer));
+}
+
+void GameScene::updateTimer(float t)
+{
+	_RemainTime -= t;
+
+	if (_RemainTime < 0)
+	{
+		_RemainTime = 0;
+		unschedule(schedule_selector(GameScene::updateTimer));
+		ui_timer_label->setString("0");
+	}
+	
+	char str[10] = {0};
+	sprintf(str, "%2.0f", _RemainTime);
+	ui_timer_label->setString(str);
+
 }
 
 void GameScene::onBoardReady(cocos2d::EventCustom* events)

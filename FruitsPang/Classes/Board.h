@@ -35,6 +35,8 @@ public:
 
 	std::vector<BoardMove> findAvailableMove();
 
+	void Blink();
+
 	virtual void onEnter();
 	bool isBusy() noexcept{ return busy; }
 
