@@ -232,6 +232,7 @@ void Board::removeBlockAt(BoardPosition pos)
 	if (block)
 	{
 		blocks[pos.row][pos.col] = nullptr;
+		block->explode();
 		removeChild(block, true);
 	}
 }
