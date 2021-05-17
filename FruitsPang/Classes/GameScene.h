@@ -30,6 +30,7 @@ private:
 	
 	int		currentScore = 0;
 	float _RemainTime;
+	bool	isFade = false;
 
 	void swipeBlock(Block* first, Block* second);
 	void newGame(cocos2d::Ref* ref);

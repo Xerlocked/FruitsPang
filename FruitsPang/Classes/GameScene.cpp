@@ -64,20 +64,20 @@ void GameScene::onEnter()
 	/// Title - Fruits Pang 
 	auto ui_title = Sprite::createWithSpriteFrameName("GameTitle.png");
 	ui_title->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	ui_title->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height + 120));
+	ui_title->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height - 120));
 	addChild(ui_title, 1);
 
 	/// Score - Maplestory-light.ttf
 	ui_score = Label::createWithTTF("0", "fonts/Maplestory-Light.ttf", 40);
 	ui_score->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	ui_score->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height - 10));
+	ui_score->setPosition(Vec2(screenSize.width * 0.5f, 1570));
 	ui_score->setTextColor(Color4B(173, 138, 122, 255));
 	addChild(ui_score, 1);
 
 	/// Progressbar - Background
 	auto ui_timer_bg = Sprite::createWithSpriteFrameName("Progressbar_bg.png");
 	ui_timer_bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	ui_timer_bg->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height * 0.2f + 10));
+	ui_timer_bg->setPosition(Vec2(screenSize.width * 0.5f, 40));
 
 	ui_timer_label = Label::createWithTTF("60", "fonts/Jellee-Roman.ttf", 56);
 	ui_timer_label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -102,7 +102,7 @@ void GameScene::onEnter()
 	/// Board - 9x9
 	board = Board::createBoard(MAX_ROW, MAX_COL);
 	board->setPosition(screenSize.width * 0.5f - board->getContentSize().width * 0.5f,
-		screenSize.height * 0.5f - board->getContentSize().height * 0.5f + 180);
+		screenSize.height * 0.5f - board->getContentSize().height * 0.5f);
 	addChild(board, 1);
 
 	board->generateCell();
@@ -294,7 +294,19 @@ void GameScene::addScore(int score)
 
 void GameScene::onBlink(float t)
 {
-	
+	if (isFade)
+	{
+		EventCustom ec(EVENT_FADE_IN);
+		_eventDispatcher->dispatchEvent(&ec);
+		isFade = false;
+	}
+	else
+	{
+
+		EventCustom ec(EVENT_FADE_OUT);
+		_eventDispatcher->dispatchEvent(&ec);
+		isFade = true;
+	}
 }
 
 void GameScene::setTimer()
@@ -304,6 +316,7 @@ void GameScene::setTimer()
 	_RemainTime = 60.0f;
 
 	schedule(schedule_selector(GameScene::updateTimer));
+	schedule(schedule_selector(GameScene::onBlink),5.0f);
 }
 
 void GameScene::updateTimer(float t)
@@ -315,6 +328,7 @@ void GameScene::updateTimer(float t)
 		_RemainTime = 0;
 		unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
+		unschedule(schedule_selector(GameScene::onBlink));
 	}
 	
 	char str[10];
