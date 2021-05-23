@@ -8,7 +8,6 @@ class MenuScene : public cocos2d::Scene
 public:
 	static cocos2d::Scene* createScene();
 	virtual bool init();
-	void menuCallback(Ref* pSender);
 
 	CREATE_FUNC(MenuScene);
 };
