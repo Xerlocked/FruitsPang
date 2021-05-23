@@ -56,21 +56,18 @@ bool ResultPopup::init(int score)
 	ui_Score->setTextColor(Color4B::WHITE);
 	back->addChild(ui_Score, 11);
 
-	auto btn_Replay = Sprite::createWithSpriteFrameName("ReplayButton.png");
 
-	auto itemReplay = MenuItemSprite::create(btn_Replay, NULL, CC_CALLBACK_1(ResultPopup::onClickButton, this));
-	itemReplay->setTag(1);
-	itemReplay->setPosition(Vec2(back->getContentSize().width / 2 - 200, 0));
+	auto ReplayButton = ui::Button::create("ReplayButton.png", "", "", ui::Widget::TextureResType::PLIST);
+	ReplayButton->setTag(1);
+	ReplayButton->setPosition(Vec2(back->getContentSize().width / 2 - 200, 0));
+	ReplayButton->addClickEventListener(CC_CALLBACK_1(ResultPopup::onClickButton, this));
+	back->addChild(ReplayButton, 11);
 
-	auto btn_Menu = Sprite::createWithSpriteFrameName("MenuButton.png");
-
-	auto itemMenu = MenuItemSprite::create(btn_Menu, NULL, CC_CALLBACK_1(ResultPopup::onClickButton, this));
-	itemMenu->setTag(2);
-	itemMenu->setPosition(Vec2(back->getContentSize().width / 2 + 200, 0));
-
-	auto menu = Menu::create(itemReplay, itemMenu, NULL);
-	menu->setPosition(Vec2::ZERO);
-	back->addChild(menu);
+	auto MenuButton = ui::Button::create("MenuButton.png", "", "", ui::Widget::TextureResType::PLIST);
+	MenuButton->setTag(2);
+	MenuButton->setPosition(Vec2(back->getContentSize().width / 2 + 200, 0));
+	MenuButton->addClickEventListener(CC_CALLBACK_1(ResultPopup::onClickButton, this));
+	back->addChild(MenuButton, 11);
 
 	/// 점수 애니메이션
 	//auto actionBestScore = ActionFloat::create(1.5f, 0, currentScore + score, [&](int value)
