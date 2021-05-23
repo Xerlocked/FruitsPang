@@ -23,8 +23,8 @@
  ****************************************************************************/
 
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
 #include "MenuScene.h"
+#include "DataManager.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -119,6 +119,23 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //}
 
     register_all_packages();
+
+    auto path = FileUtils::getInstance()->getWritablePath();
+
+    if (FileUtils::getInstance()->isFileExist(path + "config.ini"))
+    {
+        CCLOG("FileSystem | [%s] exist", (path + "config.ini").c_str());
+        auto configText = FileUtils::getInstance()->getStringFromFile(path + "config.ini");
+        CCLOG("[%s]", configText.c_str());
+
+        DataManager::getInstance()->loadScore(configText);
+    }
+    else
+    {
+        CCLOG("FileSystem | [%s] not exist", (path + "config.ini").c_str());
+
+        FileUtils::getInstance()->writeStringToFile("0,0,0", path + "config.ini");
+    }
 
     // create a scene. it's an autorelease object
     auto scene = MenuScene::createScene();

@@ -1,5 +1,6 @@
 #include "MenuScene.h"
 #include "GameScene.h"
+#include "DataManager.h"
 
 USING_NS_CC;
 
@@ -33,6 +34,7 @@ bool MenuScene::init()
 		CCLOG("Click");
 
 		Scene* game = GameScene::createScene();
+		DataManager::getInstance()->setPlayMode(PLAYMODE::NORAML);
 		Director::getInstance()->replaceScene(game);
 		});
 	noraml_menu_item->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);

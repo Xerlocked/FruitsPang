@@ -1,5 +1,5 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
 #include "cocos2d.h"
 
@@ -11,7 +11,6 @@ const auto EVENT_FADE_IN	= "event.custom.fade.in";
 //const auto COLOR_BROWN = cocos2d::Color3B(173,138,122);
 
 const int MAX_MATCH = 3;
-
 const int MAX_ROW = 7;
 const int MAX_COL = 7;
 
@@ -21,14 +20,12 @@ const cocos2d::Size m_BlockSize = cocos2d::Size(128, 150);
 
 const cocos2d::Size m_CellSize = cocos2d::Size(148, 148);
 
-enum PLAYMODE
+enum class PLAYMODE : int
 {
 	NORAML = 0,
 	REVERSE,
 	BLINK
 };
-
-static short GLOBAL_PLAYMODE = PLAYMODE::NORAML;
 
 enum class BlockType : int
 {
@@ -74,5 +71,5 @@ struct EventMatchesData {
 	int matches;
 };
 
-#endif // !CONSTANTS_H
+#endif // !GLOBAL_H
 

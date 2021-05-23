@@ -26,6 +26,7 @@ private:
 	Block* activeBlock = nullptr;
 	Board* board = nullptr;
 	bool isBusy = false;
+	bool isPlay = false;
 	std::vector<BoardMove> availableMove;
 	
 	int		currentScore = 0;

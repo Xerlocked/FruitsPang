@@ -1,7 +1,9 @@
 #include "GameScene.h"
 #include "ResultPopup.h"
+#include "DataManager.h"
 
 USING_NS_CC;
+USING_NS_CC_EXT;
 
 Scene* GameScene::createScene()
 {
@@ -143,7 +145,7 @@ bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
 {
 	Vec2 touchPoint = touch->getLocation();
 
-	if (GLOBAL_PLAYMODE == PLAYMODE::REVERSE)
+	if (DataManager::getInstance()->getPlayMode() == PLAYMODE::REVERSE)
 	{
 		touchPoint.x = 1080 - touchPoint.x;
 		touchPoint.y = 1780 - touchPoint.y;
@@ -318,10 +320,9 @@ void GameScene::addScore(int score)
 	//char str_score[512];
 	//snprintf(str_score, 512, "%d", currentScore);
 	//ui_score->setString(str_score);
-
 	auto risingScore = ActionFloat::create(1.5f, currentScore, currentScore + score, [&](int value)
 		{
-			ui_score->setString(std::to_string(value)); 
+			ui_score->setString(std::to_string(value));
 		});
 	runAction(risingScore);
 	currentScore += score;
@@ -346,13 +347,13 @@ void GameScene::onBlink(float t)
 
 void GameScene::setTimer() /// 타이머 설정
 {
-	ui_timer->runAction(ProgressFromTo::create(60, 100, 0));
+	ui_timer->runAction(ProgressFromTo::create(5, 100, 0));
 
-	_RemainTime = 60.0f;
+	_RemainTime = 5.0f;
 
 	schedule(schedule_selector(GameScene::updateTimer));
 	
-	if(GLOBAL_PLAYMODE == PLAYMODE::BLINK)
+	if(DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
 		schedule(schedule_selector(GameScene::onBlink),5.0f);
 }
 
@@ -360,20 +361,24 @@ void GameScene::updateTimer(float t)
 {
 	_RemainTime -= t;
 
-	if (_RemainTime < 0 && !isBusy)
+	if (_RemainTime < 0 && !isPlay)
 	{
 		_RemainTime = 0;
-		unschedule(schedule_selector(GameScene::updateTimer));
+		//unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
 
 
-		if (GLOBAL_PLAYMODE == PLAYMODE::BLINK)
+		if (DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
 			unschedule(schedule_selector(GameScene::onBlink));
 
+		auto Seq = Sequence::create(DelayTime::create(5), [&]() {
+			ResultPopup* resultPopup = ResultPopup::create(currentScore);
+			this->addChild(resultPopup, 10);
+			unschedule(schedule_selector(GameScene::updateTimer));
+			}, NULL);
 
-		ResultPopup* resultPopup = ResultPopup::create(currentScore);
-		runAction(DelayTime::create(2.0f));
-		this->addChild(resultPopup, 10);
+		this->runAction(Seq);
+
 	}
 	
 	char str[10];

@@ -1,14 +1,7 @@
 #include "ResultPopup.h"
 #include "MenuScene.h"
 #include "GameScene.h"
-
-ResultPopup::ResultPopup()
-{
-}
-
-ResultPopup::~ResultPopup()
-{
-}
+#include "DataManager.h"
 
 ResultPopup* ResultPopup::create(int score)
 {
@@ -39,23 +32,22 @@ bool ResultPopup::init(int score)
 
 	fadeBack->runAction(FadeTo::create(0.5f, 200));
 
-	auto back = Sprite::createWithSpriteFrameName("Result.png");
+	back = Sprite::createWithSpriteFrameName("Result.png");
 
 	back->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(back, 10);
 
-	auto ui_BestScore = Label::createWithTTF("987,654,321", "fonts/Vagron.ttf", 130);
+	ui_BestScore = Label::createWithTTF("0", "fonts/Vagron.ttf", 130);
 	ui_BestScore->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	ui_BestScore->setPosition(Vec2(back->getContentSize().width / 2, back->getContentSize().height / 2 + 100));
 	ui_BestScore->setTextColor(Color4B(251, 50, 100,255));
 	back->addChild(ui_BestScore, 11);
 
-	auto ui_Score = Label::createWithTTF(std::to_string(score), "fonts/Vagron.ttf", 100);
+	ui_Score = Label::createWithTTF("0", "fonts/Vagron.ttf", 100);
 	ui_Score->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	ui_Score->setPosition(Vec2(back->getContentSize().width / 2, back->getContentSize().height / 2 - 165));
 	ui_Score->setTextColor(Color4B::WHITE);
 	back->addChild(ui_Score, 11);
-
 
 	auto ReplayButton = ui::Button::create("ReplayButton.png", "", "", ui::Widget::TextureResType::PLIST);
 	ReplayButton->setTag(1);
@@ -69,19 +61,18 @@ bool ResultPopup::init(int score)
 	MenuButton->addClickEventListener(CC_CALLBACK_1(ResultPopup::onClickButton, this));
 	back->addChild(MenuButton, 11);
 
-	/// 점수 애니메이션
-	//auto actionBestScore = ActionFloat::create(1.5f, 0, currentScore + score, [&](int value)
-	//	{
-	//		ui_BestScore->setString(std::to_string(value));
-	//	});
+	auto actionBestScore = ActionFloat::create(1.5f, 0, DataManager::getInstance()->getBestScorePlayMode(), [&](int value)
+		{
+			ui_BestScore->setString(std::to_string(value));
+		});
 
-	//auto actionScore = ActionFloat::create(1.5f, 0, currentScore + score, [&](int value)
-	//	{
-	//		ui_Score->setString(std::to_string(value));
-	//	});
+	auto actionScore = ActionFloat::create(1.5f, 0, score, [&](int value)
+		{
+			ui_Score->setString(std::to_string(value));
+		});
+	auto seq = Sequence::create(actionBestScore, actionScore, NULL);
 
-	//auto seq = Sequence::create(actionBestScore, actionScore, NULL);
-	//runAction(seq);
+	runAction(seq);
 
 	return true;
 }
@@ -89,9 +80,10 @@ bool ResultPopup::init(int score)
 void ResultPopup::onEnter()
 {
 	Layer::onEnter();
-
 	setTouchEnabled(true); /// 뒤 레이어 터치 방지
+
 	setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
+
 }
 
 bool ResultPopup::onTouchBegan(Touch* touch, Event* events)
@@ -110,6 +102,7 @@ void ResultPopup::onClickButton(Ref* obj)
 	case 1:
 		parent->replayGame();
 		setTouchEnabled(false);
+		this->stopAllActions();
 		this->removeAllChildrenWithCleanup(true);
 		break;
 
