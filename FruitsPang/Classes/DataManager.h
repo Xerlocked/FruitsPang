@@ -1,6 +1,7 @@
 #ifndef DATA_MANAGER_H
 #define DATA_MANAGER_H
 
+#include "cocos2d.h"
 #include "Global.h"
 #include <sstream>
 #include <vector>
@@ -19,8 +20,8 @@ public:
 	PLAYMODE getPlayMode() noexcept { return g_PlayMode; }
 	void setPlayMode(PLAYMODE mode);
 
-	void loadScore(std::string text);
-	void setBestScore(int idx, unsigned int score) { BestScore[idx] = score; }
+	void loadScore();
+	void setBestScore(int score);
 
 	int getBestScorePlayMode();
 	int getBestScoreNormal() noexcept { return BestScore[0]; }
@@ -28,7 +29,6 @@ public:
 	int getBestScoreBlink() noexcept { return BestScore[2]; }
 
 private:
-	std::vector<std::string> split(const std::string& s, char delim);
 public:
 
 private:

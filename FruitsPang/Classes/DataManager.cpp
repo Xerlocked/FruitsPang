@@ -3,6 +3,8 @@
 
 using namespace std;
 
+USING_NS_CC;
+
 static DataManager* s_DM = nullptr;
 
 DataManager* DataManager::getInstance()
@@ -24,19 +26,44 @@ void DataManager::setPlayMode(PLAYMODE mode)
 	g_PlayMode = mode;
 }
 
-void DataManager::loadScore(std::string text)
+void DataManager::loadScore()
 {
-	vector<string> r = split(text, ',');
+	BestScore[0] = UserDefault::getInstance()->getIntegerForKey("Normal");
 
-	for (int i = 0; i < 3; i++)
-	{
-		BestScore[i] = stoi(r.at(i));
-	}
+	BestScore[1] = UserDefault::getInstance()->getIntegerForKey("Reverse");
 
-	CCLOG("[%d, %d, %d]", BestScore[0], BestScore[1], BestScore[2])
+	BestScore[2] = UserDefault::getInstance()->getIntegerForKey("Blink");
+
+	CCLOG("[%d, %d, %d]", BestScore[0], BestScore[1], BestScore[2]);
 }
 
-unsigned int DataManager::getBestScorePlayMode()
+void DataManager::setBestScore(int score)
+{
+	switch (g_PlayMode)
+	{
+	case PLAYMODE::NORAML:
+
+		BestScore[0] = score;
+		UserDefault::getInstance()->setIntegerForKey("Normal", score);
+		break;
+
+	case PLAYMODE::REVERSE:
+
+		BestScore[1] = score;
+		UserDefault::getInstance()->setIntegerForKey("Reverse", score);
+		break;
+
+	case PLAYMODE::BLINK:
+
+		BestScore[2] = score;
+		UserDefault::getInstance()->setIntegerForKey("Blink", score);
+		break;
+	}
+
+	UserDefault::getInstance()->flush();
+}
+
+int DataManager::getBestScorePlayMode()
 {
 	switch (g_PlayMode)
 	{
@@ -49,20 +76,6 @@ unsigned int DataManager::getBestScorePlayMode()
 	case PLAYMODE::BLINK:
 		return BestScore[2];
 	}
-}
-
-vector<std::string> DataManager::split(const std::string& s, char delim)
-{
-
-	vector<string> result;
-	stringstream ss(s);
-	string item;
-
-	while (getline(ss, item, delim)) {
-		result.push_back(item);
-	}
-
-	return result;
 }
 
 bool DataManager::init()

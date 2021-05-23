@@ -255,6 +255,7 @@ void GameScene::replayGame()
 	newGame(this);
 	currentScore = 0;
 	ui_score->setString(std::to_string(0));
+	isBusy = false;
 
 	setTimer();
 }
@@ -317,9 +318,6 @@ void GameScene::resolveMatchForBlock(Block* block)
 
 void GameScene::addScore(int score)
 {
-	//char str_score[512];
-	//snprintf(str_score, 512, "%d", currentScore);
-	//ui_score->setString(str_score);
 	auto risingScore = ActionFloat::create(1.5f, currentScore, currentScore + score, [&](int value)
 		{
 			ui_score->setString(std::to_string(value));
@@ -364,18 +362,20 @@ void GameScene::updateTimer(float t)
 	if (_RemainTime < 0 && !isPlay)
 	{
 		_RemainTime = 0;
-		//unschedule(schedule_selector(GameScene::updateTimer));
+		unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
 
+		isBusy = true;
 
 		if (DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
 			unschedule(schedule_selector(GameScene::onBlink));
 
-		auto Seq = Sequence::create(DelayTime::create(5), [&]() {
+		auto Seq = Sequence::create(DelayTime::create(3), CallFunc::create([&]() {
+			if (currentScore > DataManager::getInstance()->getBestScorePlayMode())
+				DataManager::getInstance()->setBestScore(currentScore);
 			ResultPopup* resultPopup = ResultPopup::create(currentScore);
 			this->addChild(resultPopup, 10);
-			unschedule(schedule_selector(GameScene::updateTimer));
-			}, NULL);
+			}), NULL);
 
 		this->runAction(Seq);
 
