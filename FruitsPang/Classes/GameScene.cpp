@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "ResultPopup.h"
 
 USING_NS_CC;
 
@@ -23,7 +24,8 @@ bool GameScene::init()
 		return false;
 
 	CCLOG("init");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Images/Data.plist");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Assets/texture.plist");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Assets/UI.plist");
 	Director::getInstance()->getTextureCache()->addImage("Images/GameSceneBackground.png");
 
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -64,15 +66,30 @@ void GameScene::onEnter()
 	/// Title - Fruits Pang 
 	auto ui_title = Sprite::createWithSpriteFrameName("GameTitle.png");
 	ui_title->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	ui_title->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height - 120));
+	ui_title->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height - 170));
 	addChild(ui_title, 1);
 
 	/// Score - Maplestory-light.ttf
-	ui_score = Label::createWithTTF("0", "fonts/Maplestory-Light.ttf", 40);
+	ui_score = Label::createWithTTF("0", "fonts/Vagron.ttf", 65);
 	ui_score->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	ui_score->setPosition(Vec2(screenSize.width * 0.5f, 1570));
-	ui_score->setTextColor(Color4B(173, 138, 122, 255));
+	ui_score->enableOutline(Color4B::BLACK, 2);
+	ui_score->enableShadow();
+	ui_score->setTextColor(Color4B::WHITE);
 	addChild(ui_score, 1);
+
+	/// whiteRabbit - sprite
+	auto ui_wRabbit = Sprite::createWithSpriteFrameName("whiteRabbit.png");
+	ui_wRabbit->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_wRabbit->setPosition(Vec2(110, 1680));
+	addChild(ui_wRabbit, 1);
+
+
+	/// pinkRabbit - sprite
+	auto ui_pRabbit = Sprite::createWithSpriteFrameName("pinkRabbit.png");
+	ui_pRabbit->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	ui_pRabbit->setPosition(Vec2(970, 1680));
+	addChild(ui_pRabbit, 1);
 
 	/// Progressbar - Background
 	auto ui_timer_bg = Sprite::createWithSpriteFrameName("Progressbar_bg.png");
@@ -99,10 +116,19 @@ void GameScene::onEnter()
 	ui_timer->setPercentage(100.0f);
 	ui_timer_bg->addChild(ui_timer);
 
+
+	//auto ui_setting_button = Sprite::createWithSpriteFrameName("SettingButton.png");
+
+	auto settingButton = ui::Button::create("SettingButton.png","","",ui::Widget::TextureResType::PLIST);
+
+	settingButton->setAnchorPoint(Vec2::ANCHOR_TOP_RIGHT);
+	settingButton->setPosition(Vec2(screenSize.width - 30, screenSize.height - 30));
+	addChild(settingButton,1);
+
 	/// Board - 9x9
 	board = Board::createBoard(MAX_ROW, MAX_COL);
 	board->setPosition(screenSize.width * 0.5f - board->getContentSize().width * 0.5f,
-		screenSize.height * 0.5f - board->getContentSize().height * 0.5f);
+		screenSize.height * 0.5f - board->getContentSize().height * 0.6f);
 	addChild(board, 1);
 
 	board->generateCell();
@@ -222,6 +248,15 @@ void GameScene::newGame(cocos2d::Ref* ref)
 		newGame(this);
 }
 
+void GameScene::replayGame()
+{
+	newGame(this);
+	currentScore = 0;
+	ui_score->setString(std::to_string(0));
+
+	setTimer();
+}
+
 void GameScene::checkForMatch(Block* first, Block* second)
 {
 	bool firstMatch = board->checkForMatch(first);
@@ -309,26 +344,36 @@ void GameScene::onBlink(float t)
 	}
 }
 
-void GameScene::setTimer()
+void GameScene::setTimer() /// 타이머 설정
 {
 	ui_timer->runAction(ProgressFromTo::create(60, 100, 0));
 
 	_RemainTime = 60.0f;
 
 	schedule(schedule_selector(GameScene::updateTimer));
-	schedule(schedule_selector(GameScene::onBlink),5.0f);
+	
+	if(GLOBAL_PLAYMODE == PLAYMODE::BLINK)
+		schedule(schedule_selector(GameScene::onBlink),5.0f);
 }
 
 void GameScene::updateTimer(float t)
 {
 	_RemainTime -= t;
 
-	if (_RemainTime < 0)
+	if (_RemainTime < 0 && !isBusy)
 	{
 		_RemainTime = 0;
 		unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
-		unschedule(schedule_selector(GameScene::onBlink));
+
+
+		if (GLOBAL_PLAYMODE == PLAYMODE::BLINK)
+			unschedule(schedule_selector(GameScene::onBlink));
+
+
+		ResultPopup* resultPopup = ResultPopup::create(currentScore);
+		runAction(DelayTime::create(2.0f));
+		this->addChild(resultPopup, 10);
 	}
 	
 	char str[10];

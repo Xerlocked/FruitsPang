@@ -2,6 +2,7 @@
 #define _GAME_SCENE_H
 
 #include "cocos2d.h"
+#include "cocos-ext.h"
 #include "Board.h"
 
 
@@ -12,8 +13,7 @@ public:
 
 	virtual bool init();
 	virtual void onEnter();
-
-	
+	void replayGame();
 
 private:
 	GameScene() = default;
