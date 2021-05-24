@@ -155,8 +155,8 @@ bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
 	
 	if (DataManager::getInstance()->getPlayMode() == PLAYMODE::REVERSE)
 	{
-		touchPoint.x = 540 - touchPoint.x;
-		touchPoint.y = 850 - touchPoint.y;
+		touchPoint.x = 1100 - touchPoint.x;
+		touchPoint.y = 1700 - touchPoint.y;
 	}
 
 	CCLOG("current: [%f,%f]", touch->getLocation().x, touch->getLocation().y);

@@ -5,7 +5,6 @@
 #include "cocos-ext.h"
 #include "Board.h"
 
-
 class GameScene : public cocos2d::Layer
 {
 public:
