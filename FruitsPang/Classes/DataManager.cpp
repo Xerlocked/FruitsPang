@@ -84,7 +84,7 @@ bool DataManager::init()
 	BestScore[1] = 0;
 	BestScore[2] = 0;
 
-	g_PlayMode = PLAYMODE::NORAML;
+	g_PlayMode = PLAYMODE::REVERSE;
 
 	return true;
 }

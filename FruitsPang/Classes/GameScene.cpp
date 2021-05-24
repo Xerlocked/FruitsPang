@@ -8,16 +8,22 @@ USING_NS_CC_EXT;
 Scene* GameScene::createScene()
 {
 	auto scene = Scene::create();
-	auto gameScene = new GameScene();
-
-	gameScene->autorelease();
-
-	if (gameScene->init())
+	GameScene* gameScene = nullptr;
+	try
+	{
+		gameScene = new GameScene();
+		if (!gameScene->init())
+			throw std::bad_alloc();
+		gameScene->autorelease();
 		scene->addChild(gameScene);
-	else
-		return nullptr;
 
-	return scene;
+		return scene;
+	}
+	catch (...)
+	{
+		CC_SAFE_DELETE(gameScene);
+		throw;
+	}
 }
 
 bool GameScene::init()
@@ -145,10 +151,12 @@ bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
 {
 	Vec2 touchPoint = touch->getLocation();
 
+	CCLOG("%d", DataManager::getInstance()->getPlayMode());
+	
 	if (DataManager::getInstance()->getPlayMode() == PLAYMODE::REVERSE)
 	{
-		touchPoint.x = 1080 - touchPoint.x;
-		touchPoint.y = 1780 - touchPoint.y;
+		touchPoint.x = 540 - touchPoint.x;
+		touchPoint.y = 850 - touchPoint.y;
 	}
 
 	CCLOG("current: [%f,%f]", touch->getLocation().x, touch->getLocation().y);
@@ -359,18 +367,17 @@ void GameScene::updateTimer(float t)
 {
 	_RemainTime -= t;
 
-	if (_RemainTime < 0 && !isPlay)
+	if (_RemainTime < 0 && !board->isBusy())
 	{
+		isBusy = true;
 		_RemainTime = 0;
 		unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
 
-		isBusy = true;
-
 		if (DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
 			unschedule(schedule_selector(GameScene::onBlink));
 
-		auto Seq = Sequence::create(DelayTime::create(3), CallFunc::create([&]() {
+		auto Seq = Sequence::create(DelayTime::create(2.2), CallFunc::create([&]() {
 			if (currentScore > DataManager::getInstance()->getBestScorePlayMode())
 				DataManager::getInstance()->setBestScore(currentScore);
 			ResultPopup* resultPopup = ResultPopup::create(currentScore);
