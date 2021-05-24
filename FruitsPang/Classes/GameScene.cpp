@@ -329,7 +329,8 @@ void GameScene::addScore(int score)
 {
 	auto risingScore = ActionFloat::create(1.5f, currentScore, currentScore + score, [&](int value)
 		{
-			ui_score->setString(std::to_string(value));
+			util_add_comma_to_num(std::to_string(value).c_str(), buf, 1024);
+			ui_score->setString(buf);
 		});
 	runAction(risingScore);
 	currentScore += score;

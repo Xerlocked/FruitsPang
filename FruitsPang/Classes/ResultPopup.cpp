@@ -63,12 +63,14 @@ bool ResultPopup::init(int score)
 
 	auto actionBestScore = ActionFloat::create(1.5f, 0, DataManager::getInstance()->getBestScorePlayMode(), [&](int value)
 		{
-			ui_BestScore->setString(std::to_string(value));
+			util_add_comma_to_num(std::to_string(value).c_str(), buf, 1024);
+			ui_BestScore->setString(buf);
 		});
 
 	auto actionScore = ActionFloat::create(1.5f, 0, score, [&](int value)
 		{
-			ui_Score->setString(std::to_string(value));
+			util_add_comma_to_num(std::to_string(value).c_str(), buf, 1024);
+			ui_Score->setString(buf);
 		});
 	auto seq = Sequence::create(actionBestScore, actionScore, NULL);
 

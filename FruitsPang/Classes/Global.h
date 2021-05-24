@@ -71,5 +71,29 @@ struct EventMatchesData {
 	int matches;
 };
 
+static char buf[1024] = { 0, };
+static int util_add_comma_to_num(const char* str, char* buf, int buflen)
+{
+	int len;
+	int shift;
+
+	/* count given string */
+	len = strlen(str);
+	shift = -len;
+
+	assert(buflen >= (len + len / 3 + 1));
+
+	while (*str)
+	{
+		*buf++ = *str++;
+		if (++shift && (shift % 3) == 0)
+			*buf++ = ',';
+	}
+
+	*buf = '\0';
+
+	return 0;
+}
+
 #endif // !GLOBAL_H
 
