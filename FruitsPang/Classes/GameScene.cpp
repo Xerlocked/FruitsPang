@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "ResultPopup.h"
+#include "GameSettingPopup.h"
 #include "DataManager.h"
 
 USING_NS_CC;
@@ -128,9 +129,9 @@ void GameScene::onEnter()
 	//auto ui_setting_button = Sprite::createWithSpriteFrameName("SettingButton.png");
 
 	auto settingButton = ui::Button::create("SettingButton.png","","",ui::Widget::TextureResType::PLIST);
-
 	settingButton->setAnchorPoint(Vec2::ANCHOR_TOP_RIGHT);
 	settingButton->setPosition(Vec2(screenSize.width - 30, screenSize.height - 30));
+	settingButton->addClickEventListener(CC_CALLBACK_0(GameScene::OpenSettingPopup, this));
 	addChild(settingButton,1);
 
 	/// Board - 9x9
@@ -353,14 +354,14 @@ void GameScene::onBlink(float t)
 
 void GameScene::setTimer() /// 타이머 설정
 {
-	ui_timer->runAction(ProgressFromTo::create(60, 100, 0));
-
 	_RemainTime = 60.0f;
 
+	ui_timer->runAction(ProgressFromTo::create(_RemainTime, 100, 0));
+
 	schedule(schedule_selector(GameScene::updateTimer));
-	
-	if(DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
-		schedule(schedule_selector(GameScene::onBlink),5.0f);
+
+	if (DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
+		schedule(schedule_selector(GameScene::onBlink), 5.0f);
 }
 
 void GameScene::updateTimer(float t)
@@ -392,6 +393,26 @@ void GameScene::updateTimer(float t)
 	snprintf(str,sizeof(str), "%2.0f", _RemainTime);
 	ui_timer_label->setString(str);
 
+}
+
+void GameScene::PauseScene()
+{
+	ui_timer->stopAllActions();
+	unschedule(schedule_selector(GameScene::updateTimer));
+}
+
+void GameScene::ResumeScene()
+{
+	this->resume();
+	ui_timer->runAction(ProgressFromTo::create(_RemainTime, ui_timer->getPercentage(), 0));
+	schedule(schedule_selector(GameScene::updateTimer));
+}
+
+void GameScene::OpenSettingPopup()
+{
+	PauseScene();
+	GameSettingPopup* pop = GameSettingPopup::create();
+	this->addChild(pop, 10);
 }
 
 void GameScene::onBoardReady(cocos2d::EventCustom* events)

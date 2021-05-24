@@ -12,7 +12,10 @@ public:
 
 	virtual bool init();
 	virtual void onEnter();
+
 	void replayGame();
+	void PauseScene();
+	void ResumeScene();
 
 private:
 	GameScene() = default;
@@ -43,6 +46,7 @@ private:
 	void onBlink(float t);
 	void setTimer();
 	void updateTimer(float t);
+	void OpenSettingPopup();
 
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events);
