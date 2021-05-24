@@ -16,7 +16,6 @@ public:
 	static DataManager* getInstance();
 	bool init();
 
-
 	PLAYMODE getPlayMode() noexcept { return g_PlayMode; }
 	void setPlayMode(PLAYMODE mode);
 
@@ -27,6 +26,16 @@ public:
 	int getBestScoreNormal() noexcept { return BestScore[0]; }
 	int getBestScoreReverse() noexcept { return BestScore[1]; }
 	int getBestScoreBlink() noexcept { return BestScore[2]; }
+
+/// <summary>
+/// Sound Path
+/// </summary>
+	const char* SOUND_IN_GAME_MUSIC = "Sounds/Background1.mp3";
+	const char* SOUND_LOBBY_MUSIC = "Sounds/Background2.mp3";
+	const char* SOUND_SELECT_EFFECT = "Sounds/sound5.mp3";
+	const char* SOUND_TIME_OVER = "Sounds/sound1.mp3";
+	const char* SOUND_REMOVE_BLOCK = "Sounds/sound9.mp3";
+	const char* SOUND_NEW_RECORD = "Sounds/sound2.mp3";
 
 private:
 public:

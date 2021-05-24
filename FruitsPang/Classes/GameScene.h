@@ -28,7 +28,8 @@ private:
 	Block* activeBlock = nullptr;
 	Board* board = nullptr;
 	bool isBusy = false;
-	bool isPlay = false;
+	int audioId;
+	int audioId_remove;
 	std::vector<BoardMove> availableMove;
 	
 	int		currentScore = 0;

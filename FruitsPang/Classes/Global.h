@@ -95,5 +95,12 @@ static int util_add_comma_to_num(const char* str, char* buf, int buflen)
 	return 0;
 }
 
+struct Sound
+{
+public:
+	const char* BACKGROUND = "aaa";
+
+};
+
 #endif // !GLOBAL_H
 

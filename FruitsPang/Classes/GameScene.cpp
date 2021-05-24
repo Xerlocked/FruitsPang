@@ -2,9 +2,12 @@
 #include "ResultPopup.h"
 #include "GameSettingPopup.h"
 #include "DataManager.h"
+#include "AudioEngine.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
+
+using namespace experimental;
 
 Scene* GameScene::createScene()
 {
@@ -47,6 +50,11 @@ bool GameScene::init()
 
 	auto matchListener = EventListenerCustom::create(EVENT_HAS_MATCH, CC_CALLBACK_1(GameScene::onBoardMatch, this));
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(matchListener, this);
+
+	AudioEngine::preload(DataManager::getInstance()->SOUND_IN_GAME_MUSIC);
+	AudioEngine::preload(DataManager::getInstance()->SOUND_REMOVE_BLOCK);
+	AudioEngine::preload(DataManager::getInstance()->SOUND_NEW_RECORD);
+	AudioEngine::preload(DataManager::getInstance()->SOUND_TIME_OVER);
 
 	return true;
 }
@@ -322,6 +330,7 @@ void GameScene::resolveMatchForBlock(Block* block)
 	for (auto match : matches)
 	{
 		board->removeBlockAt(match->boardPosition);
+		audioId_remove = AudioEngine::play2d(DataManager::getInstance()->SOUND_REMOVE_BLOCK, false, 1.0f);
 	}
 }
 
@@ -357,12 +366,17 @@ void GameScene::setTimer() /// 타이머 설정
 {
 	_RemainTime = 60.0f;
 
+	if (AudioEngine::getState(audioId) != AudioEngine::AudioState::PLAYING)
+		audioId = AudioEngine::play2d(DataManager::getInstance()->SOUND_IN_GAME_MUSIC, false, 0.5f);
+
 	ui_timer->runAction(ProgressFromTo::create(_RemainTime, 100, 0));
 
 	schedule(schedule_selector(GameScene::updateTimer));
 
 	if (DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
 		schedule(schedule_selector(GameScene::onBlink), 5.0f);
+
+
 }
 
 void GameScene::updateTimer(float t)
@@ -372,6 +386,7 @@ void GameScene::updateTimer(float t)
 	if (_RemainTime < 0 && !board->isBusy())
 	{
 		isBusy = true;
+		AudioEngine::play2d(DataManager::getInstance()->SOUND_TIME_OVER);
 		_RemainTime = 0;
 		unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
@@ -381,13 +396,16 @@ void GameScene::updateTimer(float t)
 
 		auto Seq = Sequence::create(DelayTime::create(2.2), CallFunc::create([&]() {
 			if (currentScore > DataManager::getInstance()->getBestScorePlayMode())
+			{
 				DataManager::getInstance()->setBestScore(currentScore);
+				AudioEngine::play2d(DataManager::getInstance()->SOUND_NEW_RECORD);
+			}
+				
 			ResultPopup* resultPopup = ResultPopup::create(currentScore);
 			this->addChild(resultPopup, 10);
 			}), NULL);
 
 		this->runAction(Seq);
-
 	}
 	
 	char str[10];
@@ -427,4 +445,5 @@ void GameScene::onBoardMatch(cocos2d::EventCustom* events)
 {
 	EventMatchesData* em = (EventMatchesData*)events->getUserData();
 	addScore(em->matches);
+	audioId_remove = AudioEngine::play2d(DataManager::getInstance()->SOUND_REMOVE_BLOCK, false, 1.0f);
 }
