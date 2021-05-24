@@ -353,9 +353,9 @@ void GameScene::onBlink(float t)
 
 void GameScene::setTimer() /// 타이머 설정
 {
-	ui_timer->runAction(ProgressFromTo::create(5, 100, 0));
+	ui_timer->runAction(ProgressFromTo::create(60, 100, 0));
 
-	_RemainTime = 5.0f;
+	_RemainTime = 60.0f;
 
 	schedule(schedule_selector(GameScene::updateTimer));
 	
