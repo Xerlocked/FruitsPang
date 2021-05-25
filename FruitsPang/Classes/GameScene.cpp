@@ -51,11 +51,6 @@ bool GameScene::init()
 	auto matchListener = EventListenerCustom::create(EVENT_HAS_MATCH, CC_CALLBACK_1(GameScene::onBoardMatch, this));
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(matchListener, this);
 
-	AudioEngine::preload(DataManager::getInstance()->SOUND_IN_GAME_MUSIC);
-	AudioEngine::preload(DataManager::getInstance()->SOUND_REMOVE_BLOCK);
-	AudioEngine::preload(DataManager::getInstance()->SOUND_NEW_RECORD);
-	AudioEngine::preload(DataManager::getInstance()->SOUND_TIME_OVER);
-
 	return true;
 }
 
@@ -330,7 +325,7 @@ void GameScene::resolveMatchForBlock(Block* block)
 	for (auto match : matches)
 	{
 		board->removeBlockAt(match->boardPosition);
-		audioId_remove = AudioEngine::play2d(DataManager::getInstance()->SOUND_REMOVE_BLOCK, false, 1.0f);
+		DataManager::getInstance()->PlaySoundW(SOUND_REMOVE_BLOCK);
 	}
 }
 
@@ -366,8 +361,7 @@ void GameScene::setTimer() /// 타이머 설정
 {
 	_RemainTime = 60.0f;
 
-	if (AudioEngine::getState(audioId) != AudioEngine::AudioState::PLAYING)
-		audioId = AudioEngine::play2d(DataManager::getInstance()->SOUND_IN_GAME_MUSIC, false, 0.5f);
+	DataManager::getInstance()->PlayMusic(102,SOUND_IN_GAME_MUSIC);
 
 	ui_timer->runAction(ProgressFromTo::create(_RemainTime, 100, 0));
 
@@ -375,7 +369,6 @@ void GameScene::setTimer() /// 타이머 설정
 
 	if (DataManager::getInstance()->getPlayMode() == PLAYMODE::BLINK)
 		schedule(schedule_selector(GameScene::onBlink), 5.0f);
-
 
 }
 
@@ -386,7 +379,7 @@ void GameScene::updateTimer(float t)
 	if (_RemainTime < 0 && !board->isBusy())
 	{
 		isBusy = true;
-		AudioEngine::play2d(DataManager::getInstance()->SOUND_TIME_OVER);
+		DataManager::getInstance()->PlaySoundW(SOUND_TIME_OVER);
 		_RemainTime = 0;
 		unschedule(schedule_selector(GameScene::updateTimer));
 		ui_timer_label->setString("0");
@@ -398,7 +391,7 @@ void GameScene::updateTimer(float t)
 			if (currentScore > DataManager::getInstance()->getBestScorePlayMode())
 			{
 				DataManager::getInstance()->setBestScore(currentScore);
-				AudioEngine::play2d(DataManager::getInstance()->SOUND_NEW_RECORD);
+				DataManager::getInstance()->PlaySoundW(SOUND_NEW_RECORD);
 			}
 				
 			ResultPopup* resultPopup = ResultPopup::create(currentScore);
@@ -418,11 +411,13 @@ void GameScene::PauseScene()
 {
 	ui_timer->stopAllActions();
 	unschedule(schedule_selector(GameScene::updateTimer));
+	DataManager::getInstance()->PauseMusic();
 }
 
 void GameScene::ResumeScene()
 {
 	this->resume();
+	DataManager::getInstance()->ResumeMusic();
 	ui_timer->runAction(ProgressFromTo::create(_RemainTime, ui_timer->getPercentage(), 0));
 	schedule(schedule_selector(GameScene::updateTimer));
 }
@@ -445,5 +440,5 @@ void GameScene::onBoardMatch(cocos2d::EventCustom* events)
 {
 	EventMatchesData* em = (EventMatchesData*)events->getUserData();
 	addScore(em->matches);
-	audioId_remove = AudioEngine::play2d(DataManager::getInstance()->SOUND_REMOVE_BLOCK, false, 1.0f);
+	DataManager::getInstance()->PlaySoundW(SOUND_REMOVE_BLOCK);
 }

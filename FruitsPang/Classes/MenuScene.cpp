@@ -43,4 +43,12 @@ bool MenuScene::init()
 	menu->setPosition(Vec2::ZERO);
 
 	addChild(menu, 1);
+
+	
+}
+
+void MenuScene::onEnter()
+{
+	Scene::onEnter();
+	DataManager::getInstance()->PlayMusic(101,SOUND_LOBBY_MUSIC, true);
 }

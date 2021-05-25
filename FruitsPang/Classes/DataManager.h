@@ -19,7 +19,7 @@ public:
 	PLAYMODE getPlayMode() noexcept { return g_PlayMode; }
 	void setPlayMode(PLAYMODE mode);
 
-	void loadScore();
+	void loadUserData();
 	void setBestScore(int score);
 
 	int getBestScorePlayMode();
@@ -28,24 +28,29 @@ public:
 	int getBestScoreBlink() noexcept { return BestScore[2]; }
 
 /// <summary>
-/// Sound Path
+/// Sound
 /// </summary>
-	const char* SOUND_IN_GAME_MUSIC = "Sounds/Background1.mp3";
-	const char* SOUND_LOBBY_MUSIC = "Sounds/Background2.mp3";
-	const char* SOUND_SELECT_EFFECT = "Sounds/sound5.mp3";
-	const char* SOUND_TIME_OVER = "Sounds/sound1.mp3";
-	const char* SOUND_REMOVE_BLOCK = "Sounds/sound9.mp3";
-	const char* SOUND_NEW_RECORD = "Sounds/sound2.mp3";
+	void PlaySound(const char* filename, bool loop = false, float volume = 1.0f);
+	void PlayMusic(int id, const char* filename, bool loop = false, float volume = 1.0f);
+	void PauseMusic();
+	void ResumeMusic();
+	void ChangeSoundState(bool value);
+	void ChangeMusicState(bool value);
 
 private:
 public:
-
 private:
 	/// <summary>
 	/// BestScore - Normal, Reverse, Blink
 	/// </summary>
 	int BestScore[3];
 	PLAYMODE g_PlayMode;
+	bool b_muteSound;
+	bool b_muteMusic;
+	int BGM_ID1;
+	int BGM_ID2;
+
+
 };
 
 #endif // !DATA_MANAGER_H
