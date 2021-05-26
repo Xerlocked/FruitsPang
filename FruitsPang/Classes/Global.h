@@ -11,10 +11,11 @@ const auto EVENT_FADE_IN	= "event.custom.fade.in";
 
 const auto SOUND_IN_GAME_MUSIC	= "Sounds/Background1.mp3";
 const auto SOUND_LOBBY_MUSIC	= "Sounds/Background2.mp3";
-const auto SOUND_SELECT_EFFECT	= "Sounds/sound5.mp3";
+const auto SOUND_SELECT_EFFECT	= "Sounds/tap.mp3";
 const auto SOUND_TIME_OVER		= "Sounds/sound1.mp3";
 const auto SOUND_REMOVE_BLOCK	= "Sounds/sound9.mp3";
-const auto SOUND_NEW_RECORD		= "Sounds/sound2.mp3";
+const auto SOUND_SHOW_RECORD	= "Sounds/sound2.mp3";
+const auto SOUND_REMOVE_BLOCK_2 = "Sounds/sound3.mp3";
 
 //const auto COLOR_BROWN = cocos2d::Color3B(173,138,122);
 

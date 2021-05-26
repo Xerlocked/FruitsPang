@@ -34,8 +34,12 @@ public:
 	void PlayMusic(int id, const char* filename, bool loop = false, float volume = 1.0f);
 	void PauseMusic();
 	void ResumeMusic();
+	void StopMusic();
 	void ChangeSoundState(bool value);
 	void ChangeMusicState(bool value);
+
+	bool getSoundState() noexcept { return b_muteSound; }
+	bool getMusicState() noexcept { return b_muteMusic; }
 
 private:
 public:

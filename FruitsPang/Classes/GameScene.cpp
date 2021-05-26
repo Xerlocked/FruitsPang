@@ -361,6 +361,8 @@ void GameScene::setTimer() /// 타이머 설정
 {
 	_RemainTime = 60.0f;
 
+	/// 레디, 고 액션 추가
+
 	DataManager::getInstance()->PlayMusic(102,SOUND_IN_GAME_MUSIC);
 
 	ui_timer->runAction(ProgressFromTo::create(_RemainTime, 100, 0));
@@ -379,6 +381,7 @@ void GameScene::updateTimer(float t)
 	if (_RemainTime < 0 && !board->isBusy())
 	{
 		isBusy = true;
+		DataManager::getInstance()->StopMusic();
 		DataManager::getInstance()->PlaySoundW(SOUND_TIME_OVER);
 		_RemainTime = 0;
 		unschedule(schedule_selector(GameScene::updateTimer));
@@ -389,22 +392,22 @@ void GameScene::updateTimer(float t)
 
 		auto Seq = Sequence::create(DelayTime::create(2.2), CallFunc::create([&]() {
 			if (currentScore > DataManager::getInstance()->getBestScorePlayMode())
-			{
 				DataManager::getInstance()->setBestScore(currentScore);
-				DataManager::getInstance()->PlaySoundW(SOUND_NEW_RECORD);
-			}
-				
+
 			ResultPopup* resultPopup = ResultPopup::create(currentScore);
 			this->addChild(resultPopup, 10);
+
+			DataManager::getInstance()->PlaySoundW(SOUND_SHOW_RECORD);
 			}), NULL);
 
 		this->runAction(Seq);
 	}
-	
-	char str[10];
-	snprintf(str,sizeof(str), "%2.0f", _RemainTime);
-	ui_timer_label->setString(str);
-
+	else if(_RemainTime >= 0)
+	{
+		char str[10];
+		snprintf(str, sizeof(str), "%2.0f", _RemainTime);
+		ui_timer_label->setString(str);
+	}
 }
 
 void GameScene::PauseScene()
@@ -426,6 +429,7 @@ void GameScene::OpenSettingPopup()
 {
 	PauseScene();
 	GameSettingPopup* pop = GameSettingPopup::create();
+	DataManager::getInstance()->PlaySoundW(SOUND_SELECT_EFFECT);
 	this->addChild(pop, 10);
 }
 
@@ -440,5 +444,5 @@ void GameScene::onBoardMatch(cocos2d::EventCustom* events)
 {
 	EventMatchesData* em = (EventMatchesData*)events->getUserData();
 	addScore(em->matches);
-	DataManager::getInstance()->PlaySoundW(SOUND_REMOVE_BLOCK);
+	DataManager::getInstance()->PlaySoundW(SOUND_REMOVE_BLOCK_2);
 }

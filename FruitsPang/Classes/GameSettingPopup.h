@@ -18,8 +18,13 @@ public:
 	void onEnter();
 	bool onTouchBegan(Touch* touch, Event* events);
 	void onClickButton(Ref* object);
+	void onClickToggle(Ref* sender);
 
 private:
+	cocos2d::MenuItemSprite* SoundOn;
+	cocos2d::MenuItemSprite* SoundOff;
+	cocos2d::MenuItemSprite* MusicOn;
+	cocos2d::MenuItemSprite* MusicOff;
 
 };
 

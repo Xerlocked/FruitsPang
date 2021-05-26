@@ -102,12 +102,12 @@ void DataManager::PlayMusic(int id, const char* filename, bool loop, float volum
 	{
 	case 101:
 		if (AudioEngine::getState(BGM_ID1) != AudioEngine::AudioState::PLAYING)
-			BGM_ID1 = AudioEngine::play2d(filename, true);
+			BGM_ID1 = AudioEngine::play2d(filename, true, volume);
 		break;
 
 	case 102:
 		if (AudioEngine::getState(BGM_ID2) != AudioEngine::AudioState::PLAYING)
-			BGM_ID2 = AudioEngine::play2d(filename);
+			BGM_ID2 = AudioEngine::play2d(filename, loop, volume);
 		break;
 
 	default:
@@ -125,6 +125,12 @@ void DataManager::ResumeMusic()
 {
 	if (AudioEngine::getState(BGM_ID2) == AudioEngine::AudioState::PAUSED)
 		AudioEngine::resume(BGM_ID2);
+}
+
+void DataManager::StopMusic()
+{
+	AudioEngine::stop(BGM_ID2);
+	AudioEngine::stopAll();
 }
 
 void DataManager::ChangeSoundState(bool value)
