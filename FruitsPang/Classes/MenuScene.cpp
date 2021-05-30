@@ -13,15 +13,24 @@ bool MenuScene::init()
 	if (!Scene::init())
 		return false;
 
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	Size screenSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Sprite* background = Sprite::create("Images/Background.png");
-	background->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
+	
+
+	Sprite* background = Sprite::create("Images/UI/Background.png");
+	background->setPosition(origin.x + screenSize.width / 2, origin.y + screenSize.height / 2);
 	addChild(background, 0);
 
-	float rX = visibleSize.width / background->getContentSize().width;
-	float rY = visibleSize.height / background->getContentSize().height;
+	/*Sprite* Menu_title = Sprite::create("Images/UI/GameTitle.png");
+	Menu_title->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	Menu_title->setPosition(Vec2(screenSize.width * 0.5f, screenSize.height + 120));
+	addChild(Menu_title, 1);*/
+
+
+	float rX = screenSize.width / background->getContentSize().width;
+	float rY = screenSize.height / background->getContentSize().height;
 
 	background->setScaleX(rX);
 	background->setScaleY(rY);
@@ -53,7 +62,7 @@ bool MenuScene::init()
 	auto menu = Menu::create(normal_item, reverse_item, blink_item, nullptr);
 	menu->alignItemsVertically();
 	this->addChild(menu);
-	menu->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
+	menu->setPosition(origin.x + screenSize.width / 2, origin.y + screenSize.height / 2);
 
 	return true;
 }
