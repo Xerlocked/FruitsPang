@@ -30,7 +30,7 @@ public:
 /// <summary>
 /// Sound
 /// </summary>
-	void PlaySound(const char* filename, bool loop = false, float volume = 1.0f);
+	void PlaySoundW(const char* filename, bool loop = false, float volume = 1.0f);
 	void PlayMusic(int id, const char* filename, bool loop = false, float volume = 1.0f);
 	void PauseMusic();
 	void ResumeMusic();

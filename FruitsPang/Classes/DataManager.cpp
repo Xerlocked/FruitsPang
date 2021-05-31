@@ -83,7 +83,7 @@ int DataManager::getBestScorePlayMode()
 	}
 }
 
-void DataManager::PlaySound(const char* filename, bool loop, float volume)
+void DataManager::PlaySoundW(const char* filename, bool loop, float volume)
 {
 	if (b_muteSound)
 		return;
