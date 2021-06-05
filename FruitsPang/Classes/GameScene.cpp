@@ -437,7 +437,10 @@ void GameScene::onBoardReady(cocos2d::EventCustom* events)
 {
 	availableMove = board->findAvailableMove();
 	if (availableMove.size() == 0)
+	{
 		newGame(this);
+		DataManager::getInstance()->PlaySoundW(SOUND_NO_MATCH);
+	}
 }
 
 void GameScene::onBoardMatch(cocos2d::EventCustom* events)

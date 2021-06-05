@@ -17,8 +17,9 @@ const auto SOUND_REMOVE_BLOCK	= "Sounds/match01.mp3";
 const auto SOUND_SHOW_RECORD	= "Sounds/sound2.mp3";
 const auto SOUND_REMOVE_BLOCK_2 = "Sounds/match02.mp3";
 const auto SOUND_LINE_CREATE	= "Sounds/linecreate01.mp3";
-const auto SOUND_SWAP = "Sounds/swap01.mp3";
-const auto SOUND_SWAP_ERROR = "Sounds/swaperror01.mp3";
+const auto SOUND_SWAP			= "Sounds/swap01.mp3";
+const auto SOUND_SWAP_ERROR		= "Sounds/swaperror01.mp3";
+const auto SOUND_NO_MATCH		= "Sounds/shuffle01.mp3";
 
 //const auto COLOR_BROWN = cocos2d::Color3B(173,138,122);
 
