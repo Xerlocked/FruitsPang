@@ -86,6 +86,8 @@ bool MenuScene::init()
 	rightArrow->addClickEventListener(CC_CALLBACK_1(MenuScene::onClickButton, this));
 	this->addChild(rightArrow, 10);
 
+	playNumber = 0;
+	DataManager::getInstance()->setPlayMode(PLAYMODE::NORAML);
 
 	labelMode = Label::createWithTTF("NORMAL", "fonts/Jellee-Roman.ttf", 46);
 	labelMode->setTextColor(Color4B::WHITE);
