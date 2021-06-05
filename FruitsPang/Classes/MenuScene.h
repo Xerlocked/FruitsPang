@@ -3,15 +3,27 @@
 
 #include "cocos2d.h"
 
-class MenuScene : public cocos2d::Scene
+class MenuScene : public cocos2d::Layer
 {
 public:
 	static cocos2d::Scene* createScene();
-	virtual bool init();
+	
+	cocos2d::Label* labelMode;
 
+	virtual bool init();
 	virtual void onEnter();
 
-	CREATE_FUNC(MenuScene);
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events);
+	void onClickButton(Ref* object);
+	
+	void SetPlayMode();
+
+private:
+	int		playNumber = 0;
+
+	const int NUM_PLAYMODE_NORMAL	= 0;
+	const int NUM_PLAYMODE_BLINK	= 1;
+	const int NUM_PLAYMODE_REVERSE	= 2;
 };
 
 #endif
