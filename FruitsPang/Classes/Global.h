@@ -9,13 +9,16 @@ const auto EVENT_HAS_MATCH	= "event.custom.has_match";
 const auto EVENT_FADE_OUT	= "event.custom.fade.out";
 const auto EVENT_FADE_IN	= "event.custom.fade.in";
 
-const auto SOUND_IN_GAME_MUSIC	= "Sounds/Background1.mp3";
-const auto SOUND_LOBBY_MUSIC	= "Sounds/Background2.mp3";
-const auto SOUND_SELECT_EFFECT	= "Sounds/tap.mp3";
+const auto SOUND_IN_GAME_MUSIC	= "Sounds/bgm01.mp3";
+const auto SOUND_LOBBY_MUSIC	= "Sounds/menubgm01.mp3";
+const auto SOUND_SELECT_EFFECT	= "Sounds/tap01.mp3";
 const auto SOUND_TIME_OVER		= "Sounds/sound1.mp3";
-const auto SOUND_REMOVE_BLOCK	= "Sounds/sound9.mp3";
+const auto SOUND_REMOVE_BLOCK	= "Sounds/match01.mp3";
 const auto SOUND_SHOW_RECORD	= "Sounds/sound2.mp3";
-const auto SOUND_REMOVE_BLOCK_2 = "Sounds/sound3.mp3";
+const auto SOUND_REMOVE_BLOCK_2 = "Sounds/match02.mp3";
+const auto SOUND_LINE_CREATE	= "Sounds/linecreate01.mp3";
+const auto SOUND_SWAP = "Sounds/swap01.mp3";
+const auto SOUND_SWAP_ERROR = "Sounds/swaperror01.mp3";
 
 //const auto COLOR_BROWN = cocos2d::Color3B(173,138,122);
 

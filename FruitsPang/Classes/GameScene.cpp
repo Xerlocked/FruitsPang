@@ -128,9 +128,6 @@ void GameScene::onEnter()
 	ui_timer->setPercentage(100.0f);
 	ui_timer_bg->addChild(ui_timer);
 
-
-	//auto ui_setting_button = Sprite::createWithSpriteFrameName("SettingButton.png");
-
 	auto settingButton = ui::Button::create("SettingButton.png","","",ui::Widget::TextureResType::PLIST);
 	settingButton->setAnchorPoint(Vec2::ANCHOR_TOP_RIGHT);
 	settingButton->setPosition(Vec2(screenSize.width - 30, screenSize.height - 30));
@@ -149,6 +146,7 @@ void GameScene::onEnter()
 	setTimer();
 
 	CCLOG("onEnter");
+	CCLOG("%d", (int)DataManager::getInstance()->getPlayMode());
 }
 
 bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
@@ -248,6 +246,7 @@ void GameScene::swipeBlock(Block* first, Block* second)
 	board->swapBlock(first, second);
 	first->runAction(MoveTo::create(0.3f, second->getPosition()));
 	second->runAction(MoveTo::create(0.3f, first->getPosition()));
+	DataManager::getInstance()->PlaySoundW(SOUND_SWAP);
 }
 
 void GameScene::newGame(cocos2d::Ref* ref)
@@ -280,6 +279,7 @@ void GameScene::checkForMatch(Block* first, Block* second)
 	if (!firstMatch && !secondMatch) // 둘다 미스매치 - 원상복구
 	{
 		swipeBlock(first, second);
+		DataManager::getInstance()->PlaySoundW(SOUND_SWAP_ERROR);
 		return;
 	}
 
@@ -363,7 +363,7 @@ void GameScene::setTimer() /// 타이머 설정
 
 	/// 레디, 고 액션 추가
 
-	DataManager::getInstance()->PlayMusic(102,SOUND_IN_GAME_MUSIC);
+	DataManager::getInstance()->PlayMusic(102,SOUND_IN_GAME_MUSIC, true);
 
 	ui_timer->runAction(ProgressFromTo::create(_RemainTime, 100, 0));
 

@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "DataManager.h"
 
 USING_NS_CC;
 
@@ -288,6 +289,8 @@ void Board::fillBlanks()
 		CallFunc::create(CC_CALLBACK_0(Board::resolveMatchForBlocks, this, addedBlocks)),
 		NULL
 	));
+
+	DataManager::getInstance()->PlaySoundW(SOUND_LINE_CREATE);
 }
 
 void Board::resolveMatchForBlocks(std::vector<Block*> blocks)

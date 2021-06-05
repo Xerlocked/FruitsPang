@@ -152,7 +152,7 @@ void DataManager::ChangeMusicState(bool value)
 
 bool DataManager::init()
 {
-	g_PlayMode = PLAYMODE::REVERSE;
+	g_PlayMode = PLAYMODE::NORAML;
 	AudioEngine::preload(SOUND_LOBBY_MUSIC);
 	AudioEngine::preload(SOUND_IN_GAME_MUSIC);
 	return true;
