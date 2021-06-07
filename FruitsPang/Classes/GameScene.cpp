@@ -273,8 +273,8 @@ void GameScene::replayGame()
 
 void GameScene::checkForMatch(Block* first, Block* second)
 {
-	bool firstMatch = board->checkForMatch(first);
-	bool secondMatch = board->checkForMatch(second);
+	const bool firstMatch = board->checkForMatch(first);
+	const bool secondMatch = board->checkForMatch(second);
 
 	if (!firstMatch && !secondMatch) // 둘다 미스매치 - 원상복구
 	{
@@ -318,7 +318,7 @@ void GameScene::resolveMatchForBlock(Block* block)
 
 	std::vector<Block*> matches;
 
-	int num_matches = board->findMatch(block, matches);
+	const int num_matches = board->findMatch(block, matches);
 
 	addScore(num_matches * 100);
 
@@ -445,7 +445,7 @@ void GameScene::onBoardReady(cocos2d::EventCustom* events)
 
 void GameScene::onBoardMatch(cocos2d::EventCustom* events)
 {
-	EventMatchesData* em = (EventMatchesData*)events->getUserData();
+	const EventMatchesData* em = (EventMatchesData*)events->getUserData();
 	addScore(em->matches);
 	DataManager::getInstance()->PlaySoundW(SOUND_REMOVE_BLOCK_2);
 }

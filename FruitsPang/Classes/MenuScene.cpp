@@ -55,7 +55,7 @@ bool MenuScene::init()
 	addChild(title, 1);
 
 	auto playButton = ui::Button::create("Images/BlueSquareButton.png");
-	playButton->setTitleText("Play !");
+	playButton->setTitleText("Play");
 	playButton->setTitleFontName("fonts/Jellee-Roman.ttf");
 	playButton->setTitleFontSize(42);
 	playButton->setTag(0);
