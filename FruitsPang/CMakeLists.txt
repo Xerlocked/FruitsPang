@@ -52,15 +52,13 @@ include_directories(
         Classes
         ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
+
+file (GLOB_RECURSE SOURCE_FILES Classes/*.cpp)
+file (GLOB_RECURSE HEADER_FILES Classes/*.h)
+
 # add cross-platforms source files and header files 
-list(APPEND GAME_SOURCE
-     Classes/AppDelegate.cpp
-     Classes/HelloWorldScene.cpp
-     )
-list(APPEND GAME_HEADER
-     Classes/AppDelegate.h
-     Classes/HelloWorldScene.h
-     )
+list(APPEND GAME_SOURCE ${SOURCE_FILES})
+list(APPEND GAME_HEADER ${HEADER_FILES})
 
 if(ANDROID)
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
