@@ -102,7 +102,6 @@ bool GameSettingPopup::init()
 void GameSettingPopup::onEnter()
 {
 	Layer::onEnter();
-	auto visibleSize = Director::getInstance()->getOpenGLView()->getDesignResolutionSize();
 	setTouchEnabled(true);
 	setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
 }

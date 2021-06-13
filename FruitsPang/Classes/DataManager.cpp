@@ -39,7 +39,7 @@ void DataManager::loadUserData()
 
 	b_muteSound = UserDefault::getInstance()->getBoolForKey("setSound"); // 최초 실행시 값은 false
 
-	CCLOG("[%d, %d, %d]", BestScore[0], BestScore[1], BestScore[2]);
+	b_firstPlay = UserDefault::getInstance()->getBoolForKey("firstPlay");
 }
 
 void DataManager::setBestScore(int score)

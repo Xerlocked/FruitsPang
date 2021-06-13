@@ -86,7 +86,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
         glview = GLViewImpl::createWithRect("FruitsPang", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
         CCLOG("WIDTH: %f , HEIGHT: %f", designResolutionSize.width, designResolutionSize.height);
-        glview->setFrameZoomFactor(0.8f);
+        //glview->setFrameZoomFactor(0.8f);
 #else
         glview = GLViewImpl::create("FruitsPang");
 #endif

@@ -234,7 +234,7 @@ void Board::removeBlockAt(BoardPosition pos)
 	{
 		blocks[pos.row][pos.col] = nullptr;
 		block->explode();
-		removeChild(block, true);
+		removeChild(block, false);
 	}
 }
 
@@ -379,11 +379,6 @@ std::vector<BoardMove> Board::findAvailableMove()
 	}
 
 	return availableMove;
-}
-
-void Board::Blink()
-{
-	
 }
 
 void Board::onEnter()

@@ -18,11 +18,13 @@ public:
 
 	PLAYMODE getPlayMode() noexcept { return g_PlayMode; }
 	void setPlayMode(PLAYMODE mode);
+	void setFirstPlay(bool b) { b_firstPlay = b; }
 
 	void loadUserData();
 	void setBestScore(int score);
 
 	int getBestScorePlayMode();
+	bool getFirstPlay() noexcept { return b_firstPlay; }
 	int getBestScoreNormal() noexcept { return BestScore[0]; }
 	int getBestScoreReverse() noexcept { return BestScore[1]; }
 	int getBestScoreBlink() noexcept { return BestScore[2]; }
@@ -30,7 +32,7 @@ public:
 /// <summary>
 /// Sound
 /// </summary>
-	void PlaySoundW(const char* filename, bool loop = false, float volume = 1.0f);
+	void PlaySoundW(const char* filename, bool loop = false, float volume = 0.6f);
 	void PlayMusic(int id, const char* filename, bool loop = false, float volume = 1.0f);
 	void PauseMusic();
 	void ResumeMusic();
@@ -42,8 +44,6 @@ public:
 	bool getMusicState() noexcept { return b_muteMusic; }
 
 private:
-public:
-private:
 	/// <summary>
 	/// BestScore - Normal, Reverse, Blink
 	/// </summary>
@@ -51,6 +51,7 @@ private:
 	PLAYMODE g_PlayMode;
 	bool b_muteSound;
 	bool b_muteMusic;
+	bool b_firstPlay;
 	int BGM_ID1;
 	int BGM_ID2;
 

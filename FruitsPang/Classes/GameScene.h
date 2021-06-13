@@ -48,6 +48,7 @@ private:
 	void setTimer();
 	void updateTimer(float t);
 	void OpenSettingPopup();
+	void OpenModeExplain();
 
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* events);

@@ -2,6 +2,7 @@
 #include "ResultPopup.h"
 #include "GameSettingPopup.h"
 #include "DataManager.h"
+#include "Manual.h"
 #include "AudioEngine.h"
 
 USING_NS_CC;
@@ -38,7 +39,6 @@ bool GameScene::init()
 	CCLOG("init");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Assets/texture.plist");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Assets/UI.plist");
-	Director::getInstance()->getTextureCache()->addImage("Images/GameSceneBackground.png");
 
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = CC_CALLBACK_2(Board::onTouchBegan, this);
@@ -145,8 +145,8 @@ void GameScene::onEnter()
 
 	setTimer();
 
-	CCLOG("onEnter");
-	CCLOG("%d", (int)DataManager::getInstance()->getPlayMode());
+	if (!DataManager::getInstance()->getFirstPlay() && DataManager::getInstance()->getPlayMode() == PLAYMODE::REVERSE)
+		OpenModeExplain();
 }
 
 bool GameScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* events)
@@ -320,7 +320,7 @@ void GameScene::resolveMatchForBlock(Block* block)
 
 	const int num_matches = board->findMatch(block, matches);
 
-	addScore(num_matches * 100);
+	addScore(num_matches * 1000 * matches.size());
 
 	for (auto match : matches)
 	{
@@ -433,6 +433,16 @@ void GameScene::OpenSettingPopup()
 	this->addChild(pop, 10);
 }
 
+void GameScene::OpenModeExplain()
+{
+	PauseScene();
+	Manual* pop = Manual::create();
+	DataManager::getInstance()->PlaySoundW(SOUND_SELECT_EFFECT);
+	UserDefault::getInstance()->setBoolForKey("firstPlay", true);
+	DataManager::getInstance()->setFirstPlay(true);
+	this->addChild(pop, 10);
+}
+
 void GameScene::onBoardReady(cocos2d::EventCustom* events)
 {
 	availableMove = board->findAvailableMove();
@@ -446,6 +456,6 @@ void GameScene::onBoardReady(cocos2d::EventCustom* events)
 void GameScene::onBoardMatch(cocos2d::EventCustom* events)
 {
 	const EventMatchesData* em = (EventMatchesData*)events->getUserData();
-	addScore(em->matches);
+	addScore(em->matches * 1000);
 	DataManager::getInstance()->PlaySoundW(SOUND_REMOVE_BLOCK_2);
 }

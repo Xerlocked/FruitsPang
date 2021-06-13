@@ -55,11 +55,10 @@ void Block::setType(BlockType Type)
 void Block::explode()
 {
 	auto particles = ParticleFlower::create();
-	particles->setAutoRemoveOnFinish(true);
+	//particles->setAutoRemoveOnFinish(true);
 	particles->setPosition(getPosition());
-	particles->setDuration(0.01f);
+	particles->setDuration(0.02f);
 	getParent()->addChild(particles, 10);
-
 }
 
 void Block::onEnter()
